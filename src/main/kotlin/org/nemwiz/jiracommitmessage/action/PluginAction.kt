@@ -16,7 +16,6 @@ class PluginAction : AnAction() {
             val newCommitMessage = projectService?.getTaskIdFromBranchName()
             getCommitPanel(actionEvent)?.setCommitMessage(newCommitMessage)
         }
-
     }
 
     private fun getCommitPanel(actionEvent: AnActionEvent): CommitMessageI? {

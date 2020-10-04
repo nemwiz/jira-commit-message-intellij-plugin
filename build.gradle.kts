@@ -55,7 +55,7 @@ intellij {
 //  Plugin Dependencies:
 //  https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html
 //
-  setPlugins("git4idea")
+    setPlugins("git4idea")
 }
 
 // Configure detekt plugin.

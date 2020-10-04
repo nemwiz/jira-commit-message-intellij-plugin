@@ -2,6 +2,8 @@
 
 # jira-commit-message Changelog
 
+## [Unreleased]
+
 ## [2.0.0]
 ### Added
 - Support up until IntelliJ version 2020.2

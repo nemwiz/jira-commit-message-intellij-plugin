@@ -3,7 +3,7 @@ package org.nemwiz.jiracommitmessage.configuration
 import com.intellij.openapi.options.Configurable
 import javax.swing.JComponent
 
-class PluginSettingsConfiguration(): Configurable {
+class PluginSettingsConfiguration : Configurable {
 
     private lateinit var pluginSettingsConfigurationPanel: PluginSettingsConfigurationPanel
     private val pluginSettingsState
@@ -15,7 +15,8 @@ class PluginSettingsConfiguration(): Configurable {
     }
 
     override fun isModified(): Boolean {
-        return !pluginSettingsConfigurationPanel.jiraProjectPrefixField.text.equals(pluginSettingsState.jiraProjectPrefix)
+        return pluginSettingsConfigurationPanel.jiraProjectPrefixField.text !=
+            pluginSettingsState.jiraProjectPrefix
     }
 
     override fun apply() {
