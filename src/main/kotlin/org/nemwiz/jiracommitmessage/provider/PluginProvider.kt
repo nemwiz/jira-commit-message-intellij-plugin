@@ -18,5 +18,4 @@ class PluginProvider : CommitMessageProvider {
             newCommitMessage
         }
     }
-
 }

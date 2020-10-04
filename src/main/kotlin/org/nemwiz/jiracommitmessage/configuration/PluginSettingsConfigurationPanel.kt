@@ -6,7 +6,6 @@ import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-
 class PluginSettingsConfigurationPanel {
 
     var mainPanel: JPanel
@@ -14,9 +13,9 @@ class PluginSettingsConfigurationPanel {
 
     init {
         mainPanel = FormBuilder.createFormBuilder()
-                .addLabeledComponent(JBLabel("JIRA project prefix "), jiraProjectPrefixField, 1, false)
-                .addComponentFillVertically(JPanel(), 0)
-                .panel
+            .addLabeledComponent(JBLabel("JIRA project prefix "), jiraProjectPrefixField, 1, false)
+            .addComponentFillVertically(JPanel(), 0)
+            .panel
     }
 
     fun getPreferredFocusedComponent(): JComponent {

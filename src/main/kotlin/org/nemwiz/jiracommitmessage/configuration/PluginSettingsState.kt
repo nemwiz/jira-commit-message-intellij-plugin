@@ -6,8 +6,7 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 
-@State(name = "CommitMessageStoredConfiguration",
-        storages = [Storage("CommitMessageStoredConfiguration.xml")])
+@State(name = "CommitMessageStoredConfiguration", storages = [Storage("CommitMessageStoredConfiguration.xml")])
 class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginState> {
 
     var pluginState: PluginState = PluginState()

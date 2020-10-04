@@ -1,6 +1,5 @@
 package org.nemwiz.jiracommitmessage.services
 
-
 class MyApplicationService {
 
     init {
