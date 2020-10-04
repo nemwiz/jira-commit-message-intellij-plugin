@@ -1,19 +1,35 @@
 <idea-plugin>
-    <id>com.github.nemwiz.jiracommitmessageintellijplugin</id>
-    <name>jira-commit-message-intellij-plugin</name>
+    <id>org.nemwiz.jira-commit-message</id>
+    <name>JIRA id commit message</name>
     <vendor>nemwiz</vendor>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.nemwiz.jiracommitmessageintellijplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.nemwiz.jiracommitmessageintellijplugin.services.MyProjectService"/>
+        <applicationService serviceImplementation="org.nemwiz.jiracommitmessage.services.MyApplicationService"/>
+        <applicationService serviceImplementation="org.nemwiz.jiracommitmessage.configuration.PluginSettingsState"/>
+        <projectService serviceImplementation="org.nemwiz.jiracommitmessage.services.MyProjectService"/>
+
+        <projectConfigurable groupId="tools"
+                             displayName="JIRA Id Commit Message"
+                             id="preference.action.PluginActionConfiguration"
+                             nonDefaultProject="true"
+                             instance="org.nemwiz.jiracommitmessage.configuration.PluginSettingsConfiguration"/>
+
+        <vcs.commitMessageProvider implementation="org.nemwiz.jiracommitmessage.provider.PluginProvider"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.nemwiz.jiracommitmessageintellijplugin.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+    <actions>
+        <!-- Add your actions here -->
+        <action id="action.PluginAction"
+                class="org.nemwiz.jiracommitmessage.action.PluginAction"
+                text="JIRA Id Commit Message Action"
+                description="Action for inserting JIRA id from branch name into commit message"
+                icon="/icons/frog.png">
+            <add-to-group group-id="Vcs.MessageActionGroup" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
