@@ -25,6 +25,7 @@ class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginS
     }
 
     class PluginState {
-        var jiraProjectPrefix = ""
+        var jiraProjectPrefix = "(%s) "
+        var commitPrefixFormat = ""
     }
 }

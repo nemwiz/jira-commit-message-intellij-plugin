@@ -10,10 +10,12 @@ class PluginSettingsConfigurationPanel {
 
     var mainPanel: JPanel
     var jiraProjectPrefixField: JBTextField = JBTextField()
+    var commitPrefixFormatField: JBTextField = JBTextField()
 
     init {
         mainPanel = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("JIRA project prefix "), jiraProjectPrefixField, 1, false)
+            .addLabeledComponent(JBLabel("Commit prefix format "), commitPrefixFormatField, 1, false)
             .addComponentFillVertically(JPanel(), 0)
             .panel
     }

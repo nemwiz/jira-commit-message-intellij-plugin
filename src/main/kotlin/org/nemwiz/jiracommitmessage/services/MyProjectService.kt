@@ -11,13 +11,14 @@ class MyProjectService(private val project: Project) {
 
     fun getTaskIdFromBranchName(): String? {
         val jiraProjectPrefix = PluginSettingsState.instance.state.jiraProjectPrefix
+        val commitPrefixFormat = PluginSettingsState.instance.state.commitPrefixFormat
         val repositoryManager = getRepositoryManager(project)
         val branch = repositoryManager.repositories[0].currentBranch
         val matcher = branch?.let { matchBranchNameThroughRegex(jiraProjectPrefix, it) }
 
         return matcher?.let {
             return if (matcher.find()) {
-                String.format("(%s)", matcher.group(0))
+                String.format(commitPrefixFormat, matcher.group(0))
             } else {
                 ""
             }
