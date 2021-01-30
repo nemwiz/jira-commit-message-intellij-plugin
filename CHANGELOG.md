@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [2.1.0]
+### Added
+- Ability to configure brackets for commit messages
+  
+### Changed
+- Upgraded plugin template to use latest version of libraries
+
 ## [2.0.0]
 ### Added
 - Support up until IntelliJ version 2020.2
