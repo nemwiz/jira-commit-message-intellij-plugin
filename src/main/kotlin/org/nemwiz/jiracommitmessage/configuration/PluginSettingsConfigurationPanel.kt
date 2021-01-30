@@ -25,7 +25,7 @@ class PluginSettingsConfigurationPanel {
 
         mainPanel = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("JIRA project prefix "), jiraProjectPrefixField, 1, false)
-            .addLabeledComponent(JBLabel("Commit message bracket/wrapper type"), messageWrapperTypeDropdown,1, false)
+            .addLabeledComponent(JBLabel("Commit message bracket/wrapper type"), messageWrapperTypeDropdown, 1, false)
             .addComponentFillVertically(JPanel(), 0)
             .panel
     }

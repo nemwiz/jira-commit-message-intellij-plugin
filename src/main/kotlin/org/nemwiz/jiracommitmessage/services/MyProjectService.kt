@@ -18,7 +18,8 @@ class MyProjectService(private val project: Project) {
 
         return matcher?.let {
             return if (matcher.find()) {
-                String.format("%s%s%s",
+                String.format(
+                    "%s%s%s",
                     selectedMessageWrapper.substring(0, 1),
                     matcher.group(0),
                     selectedMessageWrapper.substring(1, 2)
