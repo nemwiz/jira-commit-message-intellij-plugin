@@ -6,17 +6,8 @@ Jira commit message plugin helps you by automatically appending JIRA task id to 
 [![Version](https://img.shields.io/jetbrains/plugin/v/14310-jira-id-commit-message.svg)](https://plugins.jetbrains.com/plugin/14310-jira-id-commit-message)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/14310-jira-id-commit-message.svg)](https://plugins.jetbrains.com/plugin/14310-jira-id-commit-message)
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [x] Verify the [pluginGroup](/gradle.properties), [plugin ID](/src/main/resources/META-INF/plugin.xml) and [sources package](/src/main/kotlin).
-- [x] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html).
-- [x] [Publish a plugin manually](https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/publishing_plugin.html) for the first time.
-- [x] Set the Plugin ID in the above README badges.
-- [x] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
-- [x] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-
 <!-- Plugin description -->
-A plugin that takes JIRA id from your branch name and appends it to the commit message.
+A simple plugin that takes JIRA id from your branch name and appends it to the commit message.
 <!-- Plugin description end -->
 
 ## Installation
@@ -34,13 +25,20 @@ A plugin that takes JIRA id from your branch name and appends it to the commit m
 
 ---
 
+### Configuration options
+
+JIRA project prefix - name of your JIRA project
+
+
 ### How to use the plugin
 
 
 1. [Install the plugin](https://plugins.jetbrains.com/plugin/14310-jira-id-commit-message)
 2. Go to File > Settings > Tools > JIRA Id Commit Message
 3. Add your project prefix (e.g. your JIRA ticket is FROG-123, so your project prefix would be FROG)
-![Example](screenshot1.JPG)
+   
+(Optional) Commit message bracket/wrapper type - allows to customize the bracket or the wrapper for your commit message e.g. you can have a message like `(FROG-123)` or `{FROG-123}` etc.
+![Example](screenshot1.png)
 
 4. Name your branches in one of the following format. Just an example :)
     > feature/FROG-123

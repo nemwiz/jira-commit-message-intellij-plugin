@@ -16,11 +16,16 @@ class PluginSettingsConfiguration : Configurable {
 
     override fun isModified(): Boolean {
         return pluginSettingsConfigurationPanel.jiraProjectPrefixField.text !=
-            pluginSettingsState.jiraProjectPrefix
+            pluginSettingsState.jiraProjectPrefix || pluginSettingsConfigurationPanel
+            .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType
     }
 
     override fun apply() {
         pluginSettingsState.jiraProjectPrefix = pluginSettingsConfigurationPanel.jiraProjectPrefixField.text
+        pluginSettingsState.messageWrapperType = pluginSettingsConfigurationPanel
+            .messageWrapperTypeDropdown
+            .selectedItem
+            .toString()
     }
 
     override fun getDisplayName(): String {
@@ -33,5 +38,8 @@ class PluginSettingsConfiguration : Configurable {
 
     override fun reset() {
         pluginSettingsConfigurationPanel.jiraProjectPrefixField.text = pluginSettingsState.jiraProjectPrefix
+        pluginSettingsConfigurationPanel
+            .messageWrapperTypeDropdown
+            .selectedItem = pluginSettingsState.messageWrapperType
     }
 }
