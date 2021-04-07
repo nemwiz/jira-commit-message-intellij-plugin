@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project
 import git4idea.GitLocalBranch
 import git4idea.GitUtil.getRepositoryManager
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
+import java.util.Locale
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -19,6 +20,7 @@ class MyProjectService(private val project: Project) {
         return matcher?.let {
             return if (matcher.find()) {
                 String.format(
+                    Locale.US,
                     "%s%s%s",
                     selectedMessageWrapper.substring(0, 1),
                     matcher.group(0),
@@ -31,7 +33,7 @@ class MyProjectService(private val project: Project) {
     }
 
     private fun matchBranchNameThroughRegex(valueToMatch: String?, branch: GitLocalBranch): Matcher? {
-        val pattern = Pattern.compile(String.format("%s+-[0-9]+", valueToMatch))
+        val pattern = Pattern.compile(String.format(Locale.US, "%s+-[0-9]+", valueToMatch))
         return pattern.matcher(branch.name)
     }
 }
