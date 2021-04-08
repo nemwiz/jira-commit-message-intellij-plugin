@@ -3,6 +3,8 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
     // Java support
     id("java")
@@ -18,23 +20,8 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 
-// Import variables from gradle.properties file
-val pluginGroup: String by project
-// `pluginName_` variable ends with `_` because of the collision with Kotlin magic getter in the `intellij` closure.
-// Read more about the issue: https://github.com/JetBrains/intellij-platform-plugin-template/issues/29
-val pluginName_: String by project
-val pluginVersion: String by project
-val pluginSinceBuild: String by project
-val pluginUntilBuild: String by project
-val pluginVerifierIdeVersions: String by project
-
-val platformType: String by project
-val platformVersion: String by project
-val platformPlugins: String by project
-val platformDownloadSources: String by project
-
-group = pluginGroup
-version = pluginVersion
+group = properties("pluginGroup")
+version = properties("pluginVersion")
 
 // Configure project's dependencies
 repositories {
@@ -48,14 +35,21 @@ dependencies {
 // Configure gradle-intellij-plugin plugin.
 // Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    pluginName = pluginName_
-    version = platformVersion
-    type = platformType
-    downloadSources = platformDownloadSources.toBoolean()
+    pluginName = properties("pluginName")
+    version = properties("platformVersion")
+    type = properties("platformType")
+    downloadSources = properties("platformDownloadSources").toBoolean()
     updateSinceUntilBuild = true
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    setPlugins(*platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
+    setPlugins(*properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
+}
+
+// Configure gradle-changelog-plugin plugin.
+// Read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    version = properties("pluginVersion")
+    groups = emptyList()
 }
 
 // Configure detekt plugin.
@@ -77,10 +71,8 @@ tasks {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
     }
-    listOf("compileKotlin", "compileTestKotlin").forEach {
-        getByName<KotlinCompile>(it) {
-            kotlinOptions.jvmTarget = "1.8"
-        }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
     }
 
     withType<Detekt> {
@@ -88,19 +80,19 @@ tasks {
     }
 
     patchPluginXml {
-        version(pluginVersion)
-        sinceBuild(pluginSinceBuild)
-        untilBuild(pluginUntilBuild)
+        version(properties("pluginVersion"))
+        sinceBuild(properties("pluginSinceBuild"))
+        untilBuild(properties("pluginUntilBuild"))
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription(
             closure {
-                File("./README.md").readText().lines().run {
+                File(projectDir, "README.md").readText().lines().run {
                     val start = "<!-- Plugin description -->"
                     val end = "<!-- Plugin description end -->"
 
                     if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin description section not found in README.md file:\n$start ... $end")
+                        throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
                     }
                     subList(indexOf(start) + 1, indexOf(end))
                 }.joinToString("\n").run { markdownToHTML(this) }
@@ -116,12 +108,12 @@ tasks {
     }
 
     runPluginVerifier {
-        ideVersions(pluginVerifierIdeVersions)
+        ideVersions(properties("pluginVerifierIdeVersions"))
     }
 
     publishPlugin {
         dependsOn("patchChangelog")
         token(System.getenv("PUBLISH_TOKEN"))
-        channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
+        channels(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first())
     }
 }
