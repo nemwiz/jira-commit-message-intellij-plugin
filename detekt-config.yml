@@ -6,3 +6,6 @@ formatting:
     continuationIndentSize: 8
   ParameterListWrapping:
     indentSize: 8
+style:
+  ReturnCount:
+    max: 3
