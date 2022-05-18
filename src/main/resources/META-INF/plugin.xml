@@ -20,6 +20,10 @@
                              instance="org.nemwiz.jiracommitmessage.configuration.PluginSettingsConfiguration"/>
 
         <vcs.commitMessageProvider implementation="org.nemwiz.jiracommitmessage.provider.PluginProvider"/>
+
+        <notificationGroup id="JIRA Id Commit Message Notification Group"
+                     displayType="BALLOON"
+                     key="notification.group.name"/>
     </extensions>
 
     <actions>
