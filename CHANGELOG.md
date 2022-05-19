@@ -3,6 +3,7 @@
 # jira-commit-message Changelog
 
 ## [Unreleased]
+## [2.1.5]
 ### Added
 - Shows a notification when plugin is not configured properly
 - Support for IntelliJ version 2022.1
