@@ -14,6 +14,7 @@ class PluginSettingsConfigurationPanel {
     var messageWrapperTypeDropdown: ComboBox<String> = ComboBox()
 
     init {
+        messageWrapperTypeDropdown.addItem(MessageWrapperType.NO_WRAPPER.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.ROUND.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.BOX.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.CURLY.type)

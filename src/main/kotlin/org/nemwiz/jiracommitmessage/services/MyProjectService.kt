@@ -4,6 +4,7 @@ import com.intellij.notification.BrowseNotificationAction
 import com.intellij.openapi.project.Project
 import git4idea.GitLocalBranch
 import git4idea.GitUtil.getRepositoryManager
+import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 import java.util.Locale
@@ -36,20 +37,28 @@ class MyProjectService(private val project: Project) {
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val repositoryManager = getRepositoryManager(project)
         val branch = repositoryManager.repositories[0].currentBranch
-        val matcher = branch?.let { matchBranchNameThroughRegex(jiraProjectPrefix, it) }
+        val jiraPrefixRegex = branch?.let { matchBranchNameThroughRegex(jiraProjectPrefix, it) }
 
-        return matcher?.let {
-            return if (matcher.find()) {
-                String.format(
-                    Locale.US,
-                    "%s%s%s",
-                    selectedMessageWrapper.substring(0, 1),
-                    matcher.group(0),
-                    selectedMessageWrapper.substring(1, 2)
-                )
+        return jiraPrefixRegex?.let {
+            return if (jiraPrefixRegex.find()) {
+                return createCommitMessage(selectedMessageWrapper, jiraPrefixRegex)
             } else {
                 ""
             }
+        }
+    }
+
+    private fun createCommitMessage(wrapperType: String, jiraPrefixRegex: Matcher): String {
+        return if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
+            jiraPrefixRegex.group(0)
+        } else {
+            String.format(
+                Locale.US,
+                "%s%s%s",
+                wrapperType.substring(0, 1),
+                jiraPrefixRegex.group(0),
+                wrapperType.substring(1, 2)
+            )
         }
     }
 
