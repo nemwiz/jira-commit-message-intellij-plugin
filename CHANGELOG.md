@@ -3,6 +3,7 @@
 # jira-commit-message Changelog
 
 ## [Unreleased]
+## [2.2.0]
 ## [2.1.5]
 ### Added
 - Shows a notification when plugin is not configured properly
