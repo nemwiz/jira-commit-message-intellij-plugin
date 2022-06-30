@@ -13,7 +13,7 @@
         <applicationService serviceImplementation="org.nemwiz.jiracommitmessage.configuration.PluginSettingsState"/>
         <projectService serviceImplementation="org.nemwiz.jiracommitmessage.services.MyProjectService"/>
 
-        <projectConfigurable groupId="tools"
+        <applicationConfigurable groupId="tools"
                              displayName="JIRA Id Commit Message"
                              id="preference.action.PluginActionConfiguration"
                              nonDefaultProject="true"
