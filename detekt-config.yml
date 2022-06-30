@@ -6,6 +6,13 @@ formatting:
     continuationIndentSize: 8
   ParameterListWrapping:
     indentSize: 8
+  MaximumLineLength:
+    maxLineLength: 140
 style:
   ReturnCount:
     max: 5
+  MaxLineLength:
+    maxLineLength: 140
+complexity:
+  NestedBlockDepth:
+    threshold: 6

@@ -17,8 +17,8 @@ class PluginSettingsConfiguration : Configurable {
 
     override fun isModified(): Boolean {
         return pluginSettingsConfigurationPanel
-            .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType
-            || setOf(pluginSettingsConfigurationPanel.prefixesModel.items) != setOf(pluginSettingsState.jiraProjectPrefixes)
+            .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
+            setOf(pluginSettingsConfigurationPanel.prefixesModel.items) != setOf(pluginSettingsState.jiraProjectPrefixes)
     }
 
     override fun apply() {
