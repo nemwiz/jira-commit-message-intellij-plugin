@@ -14,9 +14,9 @@ import java.util.regex.Pattern
 class MyProjectService(private val project: Project) {
 
     fun getTaskIdFromBranchName(): String? {
-        val jiraProjectPrefix = PluginSettingsState.instance.state.jiraProjectPrefix
+        val jiraProjectPrefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
 
-        if (jiraProjectPrefix == "") {
+        if (jiraProjectPrefixes.isEmpty()) {
             val notifier = PluginNotifier()
             notifier.showWarning(
                 project,
@@ -37,15 +37,22 @@ class MyProjectService(private val project: Project) {
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val repositoryManager = getRepositoryManager(project)
         val branch = repositoryManager.repositories[0].currentBranch
-        val jiraPrefixRegex = branch?.let { matchBranchNameThroughRegex(jiraProjectPrefix, it) }
 
-        return jiraPrefixRegex?.let {
-            return if (jiraPrefixRegex.find()) {
-                return createCommitMessage(selectedMessageWrapper, jiraPrefixRegex)
-            } else {
-                ""
+        jiraProjectPrefixes.forEach { prefix ->
+            run {
+                val jiraPrefixRegex = branch?.let { matchBranchNameThroughRegex(prefix, it) }
+
+                return jiraPrefixRegex?.let {
+                    if (jiraPrefixRegex.find()) {
+                        return createCommitMessage(selectedMessageWrapper, jiraPrefixRegex)
+                    } else {
+                        return@forEach
+                    }
+                }
             }
         }
+
+        return ""
     }
 
     private fun createCommitMessage(wrapperType: String, jiraPrefixRegex: Matcher): String {

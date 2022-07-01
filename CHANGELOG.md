@@ -3,6 +3,11 @@
 # jira-commit-message Changelog
 
 ## [Unreleased]
+### Added
+- Ability to specify multiple prefixes
+
+### Changed
+- Plugin settings are now global instead of per project
 ## [2.2.0]
 ## [2.1.5]
 ### Added

@@ -1,6 +1,7 @@
 package org.nemwiz.jiracommitmessage.configuration
 
 import com.intellij.openapi.options.Configurable
+import com.intellij.ui.CollectionListModel
 import javax.swing.JComponent
 
 class PluginSettingsConfiguration : Configurable {
@@ -15,17 +16,17 @@ class PluginSettingsConfiguration : Configurable {
     }
 
     override fun isModified(): Boolean {
-        return pluginSettingsConfigurationPanel.jiraProjectPrefixField.text !=
-            pluginSettingsState.jiraProjectPrefix || pluginSettingsConfigurationPanel
-            .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType
+        return pluginSettingsConfigurationPanel
+            .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
+            setOf(pluginSettingsConfigurationPanel.prefixesModel.items) != setOf(pluginSettingsState.jiraProjectPrefixes)
     }
 
     override fun apply() {
-        pluginSettingsState.jiraProjectPrefix = pluginSettingsConfigurationPanel.jiraProjectPrefixField.text
         pluginSettingsState.messageWrapperType = pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown
             .selectedItem
             .toString()
+        pluginSettingsState.jiraProjectPrefixes = pluginSettingsConfigurationPanel.prefixesModel.items
     }
 
     override fun getDisplayName(): String {
@@ -37,9 +38,10 @@ class PluginSettingsConfiguration : Configurable {
     }
 
     override fun reset() {
-        pluginSettingsConfigurationPanel.jiraProjectPrefixField.text = pluginSettingsState.jiraProjectPrefix
         pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown
             .selectedItem = pluginSettingsState.messageWrapperType
+        pluginSettingsConfigurationPanel.prefixesModel = CollectionListModel(pluginSettingsState.jiraProjectPrefixes)
+        pluginSettingsConfigurationPanel.prefixesList.model = pluginSettingsConfigurationPanel.prefixesModel
     }
 }

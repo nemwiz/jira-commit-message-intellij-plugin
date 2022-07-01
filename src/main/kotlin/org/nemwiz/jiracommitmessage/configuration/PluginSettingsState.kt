@@ -25,7 +25,7 @@ class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginS
     }
 
     class PluginState {
-        var jiraProjectPrefix = ""
         var messageWrapperType = MessageWrapperType.ROUND.type
+        var jiraProjectPrefixes = emptyList<String>()
     }
 }
