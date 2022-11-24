@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 ### Changed
-- Removes untilBuild to always support the latest version of IntelliJ
+- Bumps plugin to support the latest version of IntelliJ
 ## [3.0.0]
 ### Added
 - Ability to specify multiple prefixes
