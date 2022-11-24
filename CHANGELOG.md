@@ -3,6 +3,7 @@
 # jira-commit-message Changelog
 
 ## [Unreleased]
+## [3.0.1]
 ### Changed
 - Bumps plugin to support the latest version of IntelliJ
 ## [3.0.0]
