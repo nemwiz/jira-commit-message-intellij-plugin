@@ -7,7 +7,7 @@ import org.nemwiz.jiracommitmessage.services.MyProjectService
 
 class PluginProvider : CommitMessageProvider {
 
-    override fun getCommitMessage(forChangelist: LocalChangeList?, project: Project?): String? {
+    override fun getCommitMessage(forChangelist: LocalChangeList, project: Project): String? {
         val oldCommitMessage = forChangelist?.comment
         val projectService = project?.getService(MyProjectService::class.java)
         val newCommitMessage = projectService?.getTaskIdFromBranchName()
