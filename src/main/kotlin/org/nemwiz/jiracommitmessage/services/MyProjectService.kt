@@ -2,18 +2,16 @@ package org.nemwiz.jiracommitmessage.services
 
 import com.intellij.notification.BrowseNotificationAction
 import com.intellij.openapi.project.Project
-import git4idea.GitLocalBranch
-import git4idea.GitUtil.getRepositoryManager
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
-import java.util.Locale
+import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class MyProjectService(private val project: Project) {
 
-    fun getTaskIdFromBranchName(): String? {
+    fun getTaskIdFromBranchName(branchName: String?): String? {
         val jiraProjectPrefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
 
         if (jiraProjectPrefixes.isEmpty()) {
@@ -35,12 +33,10 @@ class MyProjectService(private val project: Project) {
         }
 
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
-        val repositoryManager = getRepositoryManager(project)
-        val branch = repositoryManager.repositories[0].currentBranch
 
         jiraProjectPrefixes.forEach { prefix ->
             run {
-                val jiraPrefixRegex = branch?.let { matchBranchNameThroughRegex(prefix, it) }
+                val jiraPrefixRegex = branchName?.let { matchBranchNameThroughRegex(prefix, it) }
 
                 return jiraPrefixRegex?.let {
                     if (jiraPrefixRegex.find()) {
@@ -69,8 +65,8 @@ class MyProjectService(private val project: Project) {
         }
     }
 
-    private fun matchBranchNameThroughRegex(valueToMatch: String?, branch: GitLocalBranch): Matcher? {
+    private fun matchBranchNameThroughRegex(valueToMatch: String?, branchName: String): Matcher? {
         val pattern = Pattern.compile(String.format(Locale.US, "%s+-[0-9]+", valueToMatch))
-        return pattern.matcher(branch.name)
+        return pattern.matcher(branchName)
     }
 }

@@ -20,6 +20,7 @@
                              instance="org.nemwiz.jiracommitmessage.configuration.PluginSettingsConfiguration"/>
 
         <vcs.commitMessageProvider implementation="org.nemwiz.jiracommitmessage.provider.PluginProvider"/>
+        <checkinHandlerFactory implementation="org.nemwiz.jiracommitmessage.handler.BranchCheckoutHandler"/>
 
         <notificationGroup id="JIRA Id Commit Message Notification Group"
                      displayType="BALLOON"
