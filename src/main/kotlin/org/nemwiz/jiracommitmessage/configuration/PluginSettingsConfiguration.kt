@@ -18,12 +18,17 @@ class PluginSettingsConfiguration : Configurable {
     override fun isModified(): Boolean {
         return pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
+            pluginSettingsConfigurationPanel.infixTypeDropdown.selectedItem != pluginSettingsState.messageInfixType ||
             setOf(pluginSettingsConfigurationPanel.prefixesModel.items) != setOf(pluginSettingsState.jiraProjectPrefixes)
     }
 
     override fun apply() {
         pluginSettingsState.messageWrapperType = pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown
+            .selectedItem
+            .toString()
+        pluginSettingsState.messageInfixType = pluginSettingsConfigurationPanel
+            .infixTypeDropdown
             .selectedItem
             .toString()
         pluginSettingsState.jiraProjectPrefixes = pluginSettingsConfigurationPanel.prefixesModel.items
@@ -41,6 +46,9 @@ class PluginSettingsConfiguration : Configurable {
         pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown
             .selectedItem = pluginSettingsState.messageWrapperType
+        pluginSettingsConfigurationPanel
+            .infixTypeDropdown
+            .selectedItem = pluginSettingsState.messageInfixType
         pluginSettingsConfigurationPanel.prefixesModel = CollectionListModel(pluginSettingsState.jiraProjectPrefixes)
         pluginSettingsConfigurationPanel.prefixesList.model = pluginSettingsConfigurationPanel.prefixesModel
     }

@@ -2,6 +2,7 @@ package org.nemwiz.jiracommitmessage.services
 
 import com.intellij.notification.BrowseNotificationAction
 import com.intellij.openapi.project.Project
+import org.nemwiz.jiracommitmessage.configuration.InfixType
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
@@ -33,6 +34,7 @@ class MyProjectService(private val project: Project) {
         }
 
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
+        val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
         jiraProjectPrefixes.forEach { prefix ->
             run {
@@ -40,7 +42,7 @@ class MyProjectService(private val project: Project) {
 
                 return jiraPrefixRegex?.let {
                     if (jiraPrefixRegex.find()) {
-                        return createCommitMessage(selectedMessageWrapper, jiraPrefixRegex)
+                        return createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraPrefixRegex)
                     } else {
                         return@forEach
                     }
@@ -51,8 +53,13 @@ class MyProjectService(private val project: Project) {
         return ""
     }
 
-    private fun createCommitMessage(wrapperType: String, jiraPrefixRegex: Matcher): String {
-        return if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
+    private fun createCommitMessage(wrapperType: String, infixType: String, jiraPrefixRegex: Matcher): String {
+        val messageWithWrapper = addWrapper(wrapperType, jiraPrefixRegex)
+        return addInfix(infixType, messageWithWrapper)
+    }
+
+    private fun addWrapper(wrapperType: String, jiraPrefixRegex: Matcher) =
+        if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
             jiraPrefixRegex.group(0)
         } else {
             String.format(
@@ -63,7 +70,18 @@ class MyProjectService(private val project: Project) {
                 wrapperType.substring(1, 2)
             )
         }
-    }
+
+    private fun addInfix(infixType: String, commitMessage: String) =
+        if (infixType == InfixType.NO_INFIX.type) {
+            commitMessage
+        } else {
+            String.format(
+                Locale.US,
+                "%s%s",
+                commitMessage,
+                infixType
+            )
+        }
 
     private fun matchBranchNameThroughRegex(valueToMatch: String?, branchName: String): Matcher? {
         val pattern = Pattern.compile(String.format(Locale.US, "%s+-[0-9]+", valueToMatch))

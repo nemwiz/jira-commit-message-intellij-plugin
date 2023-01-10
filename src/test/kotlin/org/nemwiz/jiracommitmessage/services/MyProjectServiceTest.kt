@@ -5,6 +5,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.mockk.every
 import io.mockk.mockkConstructor
 import io.mockk.verify
+import org.nemwiz.jiracommitmessage.configuration.InfixType
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
@@ -77,5 +78,45 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         val commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
 
         assertEquals("${dummyPrefix2}-381", commitMessage)
+    }
+
+    fun testAddsInfixToTheCommitMessageWhenInfixIsSpecified() {
+
+        val dummyPrefix1 = "INFIX"
+        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1)
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.COLON.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
+
+        val mockBranch = "fix/${dummyPrefix1}-999222"
+
+        val projectService = project.service<MyProjectService>()
+
+        var commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+
+        assertEquals("{${dummyPrefix1}-999222}:", commitMessage)
+
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.DASH_SPACE.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
+
+        commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+
+        assertEquals("${dummyPrefix1}-999222 -", commitMessage)
+    }
+
+    fun testNoInfixIsShownWhenInfixIsNotSpecified() {
+
+        val dummyPrefix1 = "FROG"
+        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1)
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
+
+        val mockBranch = "fix/${dummyPrefix1}-123"
+
+        val projectService = project.service<MyProjectService>()
+
+        val commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+
+        assertEquals("(${dummyPrefix1}-123)", commitMessage)
+
     }
 }
