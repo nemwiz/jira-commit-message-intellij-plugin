@@ -20,13 +20,10 @@ class MyProjectService(private val project: Project) {
             notifier.showWarning(
                 project,
                 "Missing configuration",
-                "",
                 "Please configure your JIRA project prefix under Settings > Tools > JIRA Id Commit Message",
-                listOf(
-                    BrowseNotificationAction(
-                        "Visit documentation",
-                        "https://github.com/nemwiz/jira-commit-message-intellij-plugin"
-                    )
+                BrowseNotificationAction(
+                    "Visit documentation",
+                    "https://github.com/nemwiz/jira-commit-message-intellij-plugin"
                 )
             )
 

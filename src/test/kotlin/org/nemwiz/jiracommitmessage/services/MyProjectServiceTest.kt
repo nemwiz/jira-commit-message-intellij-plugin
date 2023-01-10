@@ -16,7 +16,7 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         PluginSettingsState.instance.state.jiraProjectPrefixes = emptyList()
 
         mockkConstructor(PluginNotifier::class)
-        every { anyConstructed<PluginNotifier>().showWarning(any(), any(), any(), any(), any()) } returns Unit
+        every { anyConstructed<PluginNotifier>().showWarning(any(), any(), any(), any()) } returns Unit
 
         val projectService = project.service<MyProjectService>()
         val taskId = projectService.getTaskIdFromBranchName("")
@@ -25,7 +25,6 @@ class MyProjectServiceTest : BasePlatformTestCase() {
             anyConstructed<PluginNotifier>().showWarning(
                 any(),
                 "Missing configuration",
-                "",
                 "Please configure your JIRA project prefix under Settings > Tools > JIRA Id Commit Message",
                 any()
             )
