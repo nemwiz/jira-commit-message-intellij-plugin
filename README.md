@@ -27,8 +27,9 @@ A simple plugin that takes JIRA id from your branch name and appends it to the c
 
 ### Configuration options
 
-JIRA project prefix - name of your JIRA project, multiple prefixes are supported
-Bracket/wrapper type - brackets that enclose your commit message
+- JIRA project prefix - name of your JIRA project, multiple prefixes are supported
+- Bracket/wrapper type - brackets that enclose your commit message
+- Message infix - infix that is appended at the end of your commit message
 
 ### How to use the plugin
 
@@ -38,6 +39,9 @@ Bracket/wrapper type - brackets that enclose your commit message
 3. Add your project prefix (e.g. your JIRA ticket is FROG-123, so your project prefix would be FROG). You can configure multiple prefixes as well
    
 (Optional) Commit message bracket/wrapper type - allows to customize the bracket or the wrapper for your commit message e.g. you can have a message like `(FROG-123)` or `{FROG-123}` etc.
+
+(Optional) Commit message infix - appends an infix to your commit message e.g. `(FROG-123):` or `FROG-123 -`
+
 ![Example](screenshot1.png)
 
 4. Name your branches in one of the following format. Just an example :)

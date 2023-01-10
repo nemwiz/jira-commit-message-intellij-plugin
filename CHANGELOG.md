@@ -3,6 +3,15 @@
 # jira-commit-message Changelog
 
 ## [Unreleased]
+### Added
+- Ability to specify message infix
+- When switching branches the commit message is updated on the commit tool window
+
+### Changed
+- Removes deprecated APIs
+- Updates plugin libraries to latest
+- Unit tests
+
 ## [3.0.1]
 ### Changed
 - Bumps plugin to support the latest version of IntelliJ

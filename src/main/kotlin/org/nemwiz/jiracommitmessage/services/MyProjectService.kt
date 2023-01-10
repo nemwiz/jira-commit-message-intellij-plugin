@@ -2,18 +2,17 @@ package org.nemwiz.jiracommitmessage.services
 
 import com.intellij.notification.BrowseNotificationAction
 import com.intellij.openapi.project.Project
-import git4idea.GitLocalBranch
-import git4idea.GitUtil.getRepositoryManager
+import org.nemwiz.jiracommitmessage.configuration.InfixType
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
-import java.util.Locale
+import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class MyProjectService(private val project: Project) {
 
-    fun getTaskIdFromBranchName(): String? {
+    fun getTaskIdFromBranchName(branchName: String?): String? {
         val jiraProjectPrefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
 
         if (jiraProjectPrefixes.isEmpty()) {
@@ -21,13 +20,10 @@ class MyProjectService(private val project: Project) {
             notifier.showWarning(
                 project,
                 "Missing configuration",
-                "",
                 "Please configure your JIRA project prefix under Settings > Tools > JIRA Id Commit Message",
-                listOf(
-                    BrowseNotificationAction(
-                        "Visit documentation",
-                        "https://github.com/nemwiz/jira-commit-message-intellij-plugin"
-                    )
+                BrowseNotificationAction(
+                    "Visit documentation",
+                    "https://github.com/nemwiz/jira-commit-message-intellij-plugin"
                 )
             )
 
@@ -35,16 +31,15 @@ class MyProjectService(private val project: Project) {
         }
 
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
-        val repositoryManager = getRepositoryManager(project)
-        val branch = repositoryManager.repositories[0].currentBranch
+        val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
         jiraProjectPrefixes.forEach { prefix ->
             run {
-                val jiraPrefixRegex = branch?.let { matchBranchNameThroughRegex(prefix, it) }
+                val jiraPrefixRegex = branchName?.let { matchBranchNameThroughRegex(prefix, it) }
 
                 return jiraPrefixRegex?.let {
                     if (jiraPrefixRegex.find()) {
-                        return createCommitMessage(selectedMessageWrapper, jiraPrefixRegex)
+                        return createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraPrefixRegex)
                     } else {
                         return@forEach
                     }
@@ -55,8 +50,13 @@ class MyProjectService(private val project: Project) {
         return ""
     }
 
-    private fun createCommitMessage(wrapperType: String, jiraPrefixRegex: Matcher): String {
-        return if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
+    private fun createCommitMessage(wrapperType: String, infixType: String, jiraPrefixRegex: Matcher): String {
+        val messageWithWrapper = addWrapper(wrapperType, jiraPrefixRegex)
+        return addInfix(infixType, messageWithWrapper)
+    }
+
+    private fun addWrapper(wrapperType: String, jiraPrefixRegex: Matcher) =
+        if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
             jiraPrefixRegex.group(0)
         } else {
             String.format(
@@ -67,10 +67,21 @@ class MyProjectService(private val project: Project) {
                 wrapperType.substring(1, 2)
             )
         }
-    }
 
-    private fun matchBranchNameThroughRegex(valueToMatch: String?, branch: GitLocalBranch): Matcher? {
+    private fun addInfix(infixType: String, commitMessage: String) =
+        if (infixType == InfixType.NO_INFIX.type) {
+            commitMessage
+        } else {
+            String.format(
+                Locale.US,
+                "%s%s",
+                commitMessage,
+                infixType
+            )
+        }
+
+    private fun matchBranchNameThroughRegex(valueToMatch: String?, branchName: String): Matcher? {
         val pattern = Pattern.compile(String.format(Locale.US, "%s+-[0-9]+", valueToMatch))
-        return pattern.matcher(branch.name)
+        return pattern.matcher(branchName)
     }
 }

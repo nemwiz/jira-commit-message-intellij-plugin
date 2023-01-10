@@ -2,9 +2,11 @@ package org.nemwiz.jiracommitmessage.action
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.components.service
 import com.intellij.openapi.vcs.CommitMessageI
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.ui.Refreshable
+import git4idea.GitUtil
 import org.nemwiz.jiracommitmessage.services.MyProjectService
 
 class PluginAction : AnAction() {
@@ -12,8 +14,12 @@ class PluginAction : AnAction() {
         val currentProject = actionEvent.project
 
         if (currentProject != null) {
-            val projectService = actionEvent.project?.getService(MyProjectService::class.java)
-            val newCommitMessage = projectService?.getTaskIdFromBranchName()
+            val service = currentProject.service<MyProjectService>()
+
+            val repositoryManager = GitUtil.getRepositoryManager(currentProject)
+            val branch = repositoryManager.repositories[0].currentBranch
+
+            val newCommitMessage = service.getTaskIdFromBranchName(branch?.name)
             getCommitPanel(actionEvent)?.setCommitMessage(newCommitMessage)
         }
     }

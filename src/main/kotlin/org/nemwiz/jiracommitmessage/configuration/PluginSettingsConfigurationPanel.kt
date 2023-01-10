@@ -13,6 +13,7 @@ class PluginSettingsConfigurationPanel {
 
     var mainPanel: JPanel
     var messageWrapperTypeDropdown: ComboBox<String> = ComboBox()
+    var infixTypeDropdown: ComboBox<String> = ComboBox()
     private var prefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
     var prefixesList: JBList<String>
     var prefixesModel: CollectionListModel<String>
@@ -28,6 +29,12 @@ class PluginSettingsConfigurationPanel {
         messageWrapperTypeDropdown.addItem(MessageWrapperType.VERTICAL_SLASH.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.FORWARD_SLASH.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.BACKSLASH.type)
+
+        infixTypeDropdown.addItem(InfixType.NO_INFIX.type)
+        infixTypeDropdown.addItem(InfixType.DASH.type)
+        infixTypeDropdown.addItem(InfixType.DASH_SPACE.type)
+        infixTypeDropdown.addItem(InfixType.COLON.type)
+        infixTypeDropdown.addItem(InfixType.COLON_SPACE.type)
 
         prefixesModel = CollectionListModel<String>(prefixes)
         prefixesList = JBList(prefixesModel)
@@ -45,6 +52,7 @@ class PluginSettingsConfigurationPanel {
 
         mainPanel = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("Commit message bracket/wrapper type"), messageWrapperTypeDropdown, 1, false)
+            .addLabeledComponent(JBLabel("Commit message infix"), infixTypeDropdown, 1, false)
             .addLabeledComponent(JBLabel("JIRA project prefixes"), toolbar.createPanel(), 1, true)
             .addComponentFillVertically(JPanel(), 0)
             .panel

@@ -1,7 +1,7 @@
 package org.nemwiz.jiracommitmessage.configuration
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -21,11 +21,12 @@ class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginS
 
     companion object {
         val instance: PluginSettingsState
-            get() = ServiceManager.getService(PluginSettingsState::class.java)
+            get() = ApplicationManager.getApplication().getService(PluginSettingsState::class.java)
     }
 
     class PluginState {
         var messageWrapperType = MessageWrapperType.ROUND.type
+        var messageInfixType = InfixType.NO_INFIX.type
         var jiraProjectPrefixes = emptyList<String>()
     }
 }
