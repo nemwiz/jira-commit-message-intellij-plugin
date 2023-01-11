@@ -1,6 +1,7 @@
 package org.nemwiz.jiracommitmessage.services
 
 import com.intellij.notification.BrowseNotificationAction
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import org.nemwiz.jiracommitmessage.configuration.InfixType
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
@@ -10,7 +11,7 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class MyProjectService(private val project: Project) {
+class MyProjectService(private val project: Project) : Disposable {
 
     fun getTaskIdFromBranchName(branchName: String?): String? {
         val jiraProjectPrefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
@@ -83,5 +84,8 @@ class MyProjectService(private val project: Project) {
     private fun matchBranchNameThroughRegex(valueToMatch: String?, branchName: String): Matcher? {
         val pattern = Pattern.compile(String.format(Locale.US, "%s+-[0-9]+", valueToMatch))
         return pattern.matcher(branchName)
+    }
+
+    override fun dispose() {
     }
 }
