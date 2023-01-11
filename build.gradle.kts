@@ -20,16 +20,20 @@ plugins {
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
-
+val remoteRobotVersion = properties("uiRobotVersion")
 
 dependencies {
     val mockkVersion = properties("mockkVersion")
     testImplementation("io.mockk:mockk:${mockkVersion}")
+    testImplementation("com.intellij.remoterobot:remote-robot:${remoteRobotVersion}")
+    testImplementation("com.intellij.remoterobot:remote-fixtures:${remoteRobotVersion}")
+    testImplementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 }
 
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    maven { url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies") }
 }
 
 // Set the JVM language level used to build project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
@@ -58,7 +62,7 @@ qodana {
     cachePath.set(file(".qodana").canonicalPath)
     reportPath.set(file("build/reports/inspections").canonicalPath)
     saveReport.set(true)
-    showReport.set(true )
+    showReport.set(true)
 }
 
 // Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
@@ -107,6 +111,12 @@ tasks {
         systemProperty("ide.mac.message.dialogs.as.sheets", "false")
         systemProperty("jb.privacy.policy.text", "<!--999.999-->")
         systemProperty("jb.consents.confirmation.enabled", "false")
+        systemProperty("idea.trust.all.projects", "true")
+        systemProperty("ide.show.tips.on.startup.default.value", "false")
+    }
+
+    downloadRobotServerPlugin {
+        this.version.set(remoteRobotVersion)
     }
 
     signPlugin {
