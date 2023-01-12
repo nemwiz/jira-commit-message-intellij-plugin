@@ -58,7 +58,7 @@ jobs:
 
       # Run tests
       - name: Tests
-        run: ./gradlew test
+        run: ./gradlew test --debug --stacktrace
 
       # Show report for debugging purposes
       - name: Save fails report
