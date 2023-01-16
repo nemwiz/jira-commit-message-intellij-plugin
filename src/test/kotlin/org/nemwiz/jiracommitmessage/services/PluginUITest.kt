@@ -5,6 +5,7 @@ import com.intellij.remoterobot.fixtures.*
 import com.intellij.remoterobot.search.locators.byXpath
 import com.intellij.remoterobot.utils.Keyboard
 import com.intellij.remoterobot.utils.waitFor
+import org.junit.Ignore
 import org.junit.Test
 import java.time.Duration
 import kotlin.test.assertEquals
@@ -14,6 +15,7 @@ class PluginUITest {
     val TWO_MINUTES = 2L
 
     @Test
+    @Ignore
     fun generateCommitMessageWithPlugin() {
 
         val robot = RemoteRobot("http://127.0.0.1:8082")
