@@ -57,8 +57,10 @@ jobs:
           retry-delay: 30s
 
       # Run tests
+      # TODO - get a proper stacktrace
+      # TODO - run UI tests on every push
       - name: Tests
-        run: ./gradlew test --debug --stacktrace
+        run: ./gradlew test
 
       # Show report for debugging purposes
       - name: Save fails report
