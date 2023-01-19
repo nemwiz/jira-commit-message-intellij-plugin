@@ -19,7 +19,7 @@ class PluginAction : AnAction() {
             val repositoryManager = GitUtil.getRepositoryManager(currentProject)
             val branch = repositoryManager.repositories[0].currentBranch
 
-            val newCommitMessage = service.getTaskIdFromBranchName(branch?.name)
+            val newCommitMessage = service.getCommitMessageFromBranchName(branch?.name)
             getCommitPanel(actionEvent)?.setCommitMessage(newCommitMessage)
         }
     }

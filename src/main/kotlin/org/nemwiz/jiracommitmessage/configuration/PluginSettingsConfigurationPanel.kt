@@ -14,9 +14,9 @@ class PluginSettingsConfigurationPanel {
     var mainPanel: JPanel
     var messageWrapperTypeDropdown: ComboBox<String> = ComboBox()
     var infixTypeDropdown: ComboBox<String> = ComboBox()
-    private var prefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
-    var prefixesList: JBList<String>
-    var prefixesModel: CollectionListModel<String>
+    private var projectKeys = PluginSettingsState.instance.state.jiraProjectKeys
+    var projectKeysList: JBList<String>
+    var projectKeysModel: CollectionListModel<String>
     private var toolbar: ToolbarDecorator
 
     init {
@@ -36,16 +36,16 @@ class PluginSettingsConfigurationPanel {
         infixTypeDropdown.addItem(InfixType.COLON.type)
         infixTypeDropdown.addItem(InfixType.COLON_SPACE.type)
 
-        prefixesModel = CollectionListModel<String>(prefixes)
-        prefixesList = JBList(prefixesModel)
-        prefixesList.setEmptyText("No prefixes configured")
+        projectKeysModel = CollectionListModel<String>(projectKeys)
+        projectKeysList = JBList(projectKeysModel)
+        projectKeysList.setEmptyText("No project keys configured")
 
-        toolbar = ToolbarDecorator.createDecorator(prefixesList).disableUpDownActions()
+        toolbar = ToolbarDecorator.createDecorator(projectKeysList).disableUpDownActions()
         toolbar.setAddAction {
             run {
-                val addPrefixDialog = AddPrefixDialog()
-                if (addPrefixDialog.showAndGet()) {
-                    prefixesModel.add(addPrefixDialog.addPrefixField.text)
+                val addProjectKeyDialog = AddProjectKeyDialog()
+                if (addProjectKeyDialog.showAndGet()) {
+                    projectKeysModel.add(addProjectKeyDialog.addProjectKeyField.text)
                 }
             }
         }
@@ -53,7 +53,7 @@ class PluginSettingsConfigurationPanel {
         mainPanel = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("Commit message bracket/wrapper type"), messageWrapperTypeDropdown, 1, false)
             .addLabeledComponent(JBLabel("Commit message infix"), infixTypeDropdown, 1, false)
-            .addLabeledComponent(JBLabel("JIRA project prefixes"), toolbar.createPanel(), 1, true)
+            .addLabeledComponent(JBLabel("JIRA project keys"), toolbar.createPanel(), 1, true)
             .addComponentFillVertically(JPanel(), 0)
             .panel
     }

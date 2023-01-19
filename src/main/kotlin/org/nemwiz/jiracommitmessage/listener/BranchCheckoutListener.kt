@@ -13,7 +13,7 @@ class BranchCheckoutListener(
     }
 
     override fun branchHasChanged(branchName: String) {
-        val commitMessage = service.getTaskIdFromBranchName(branchName)
+        val commitMessage = service.getCommitMessageFromBranchName(branchName)
 
         if (commitMessage !== null) {
             panel.commitMessage = commitMessage

@@ -13,15 +13,20 @@ import java.util.regex.Pattern
 
 class MyProjectService(private val project: Project) : Disposable {
 
-    fun getTaskIdFromBranchName(branchName: String?): String? {
-        val jiraProjectPrefixes = PluginSettingsState.instance.state.jiraProjectPrefixes
+    fun getCommitMessageFromBranchName(branchName: String?): String? {
 
-        if (jiraProjectPrefixes.isEmpty()) {
+        if (branchName == null) {
+            return ""
+        }
+
+        val jiraProjectKeys = PluginSettingsState.instance.state.jiraProjectKeys
+
+        if (jiraProjectKeys.isEmpty()) {
             val notifier = PluginNotifier()
             notifier.showWarning(
                 project,
                 "Missing configuration",
-                "Please configure your JIRA project prefix under Settings > Tools > JIRA Id Commit Message",
+                "Please configure your JIRA project key under Settings > Tools > JIRA Id Commit Message",
                 BrowseNotificationAction(
                     "Visit documentation",
                     "https://github.com/nemwiz/jira-commit-message-intellij-plugin"
@@ -34,13 +39,13 @@ class MyProjectService(private val project: Project) : Disposable {
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
-        jiraProjectPrefixes.forEach { prefix ->
+        jiraProjectKeys.forEach { projectKey ->
             run {
-                val jiraPrefixRegex = branchName?.let { matchBranchNameThroughRegex(prefix, it) }
+                val jiraIssue = branchName?.let { matchBranchNameThroughRegex(projectKey, it) }
 
-                return jiraPrefixRegex?.let {
-                    if (jiraPrefixRegex.find()) {
-                        return createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraPrefixRegex)
+                return jiraIssue?.let {
+                    if (jiraIssue.find()) {
+                        return createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraIssue)
                     } else {
                         return@forEach
                     }

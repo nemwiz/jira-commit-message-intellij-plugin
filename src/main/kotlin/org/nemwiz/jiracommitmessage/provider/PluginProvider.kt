@@ -16,7 +16,7 @@ class PluginProvider : CommitMessageProvider {
         val repositoryManager = GitUtil.getRepositoryManager(project)
         val branch = repositoryManager.repositories[0].currentBranch
 
-        val newCommitMessage = projectService.getTaskIdFromBranchName(branch?.name)
+        val newCommitMessage = projectService.getCommitMessageFromBranchName(branch?.name)
 
         return if (newCommitMessage.equals("")) {
             oldCommitMessage

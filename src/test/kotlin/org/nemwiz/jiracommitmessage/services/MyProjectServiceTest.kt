@@ -12,110 +12,123 @@ import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 
 class MyProjectServiceTest : BasePlatformTestCase() {
 
-    fun testShowsWarningPopupWhenJiraPrefixIsNotConfigured() {
-        PluginSettingsState.instance.state.jiraProjectPrefixes = emptyList()
+    fun testShowsWarningPopupWhenJiraProjectKeyIsNotConfigured() {
+        PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
 
         mockkConstructor(PluginNotifier::class)
         every { anyConstructed<PluginNotifier>().showWarning(any(), any(), any(), any()) } returns Unit
 
         val projectService = project.service<MyProjectService>()
-        val taskId = projectService.getTaskIdFromBranchName("")
+        val taskId = projectService.getCommitMessageFromBranchName("")
 
         verify {
             anyConstructed<PluginNotifier>().showWarning(
                 any(),
                 "Missing configuration",
-                "Please configure your JIRA project prefix under Settings > Tools > JIRA Id Commit Message",
+                "Please configure your JIRA project key under Settings > Tools > JIRA Id Commit Message",
                 any()
             )
         }
         assertEquals("", taskId)
     }
 
-    fun testMatchesThePrefixNameWithBranchNameAndReturnsACommitMessage() {
+    fun testMatchesTheProjectKeyWithBranchNameAndReturnsACommitMessage() {
 
-        val dummyPrefix1 = "PRJT"
-        val dummyPrefix2 = "LEGOS"
-        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1, dummyPrefix2)
+        val dummyProjectKey1 = "PRJT"
+        val dummyProjectKey2 = "LEGOS"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1, dummyProjectKey2)
 
-        val mockBranch = "feat/${dummyPrefix2}-8172"
+        val mockBranch = "feat/${dummyProjectKey2}-8172"
 
         val projectService = project.service<MyProjectService>()
 
-        val commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("(${dummyPrefix2}-8172)", commitMessage)
+        assertEquals("(${dummyProjectKey2}-8172)", commitMessage)
     }
 
     fun testWrapsTheCommitMessageInSelectedWrapper() {
 
-        val dummyPrefix1 = "MARCOM"
-        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1)
+        val dummyProjectKey1 = "MARCOM"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
 
-        val mockBranch = "this-is-an-awesome-branch-${dummyPrefix1}-22"
+        val mockBranch = "this-is-an-awesome-branch-${dummyProjectKey1}-22"
 
         val projectService = project.service<MyProjectService>()
 
-        val commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("{${dummyPrefix1}-22}", commitMessage)
+        assertEquals("{${dummyProjectKey1}-22}", commitMessage)
     }
 
     fun testDoesNotWrapCommitMessageWhenNoWrapperIsSelected() {
 
-        val dummyPrefix1 = "MARCOM"
-        val dummyPrefix2 = "FINANCE"
-        val dummyPrefix3 = "LEGOS"
-        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1, dummyPrefix2, dummyPrefix3)
+        val dummyProjectKey1 = "MARCOM"
+        val dummyProjectKey2 = "FINANCE"
+        val dummyProjectKey3 = "LEGOS"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1, dummyProjectKey2, dummyProjectKey3)
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
 
-        val mockBranch = "fix/${dummyPrefix2}-381"
+        val mockBranch = "fix/${dummyProjectKey2}-381"
 
         val projectService = project.service<MyProjectService>()
 
-        val commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("${dummyPrefix2}-381", commitMessage)
+        assertEquals("${dummyProjectKey2}-381", commitMessage)
     }
 
     fun testAddsInfixToTheCommitMessageWhenInfixIsSpecified() {
 
-        val dummyPrefix1 = "INFIX"
-        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1)
+        val dummyProjectKey1 = "INFIX"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.COLON.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
 
-        val mockBranch = "fix/${dummyPrefix1}-999222"
+        val mockBranch = "fix/${dummyProjectKey1}-999222"
 
         val projectService = project.service<MyProjectService>()
 
-        var commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+        var commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("{${dummyPrefix1}-999222}:", commitMessage)
+        assertEquals("{${dummyProjectKey1}-999222}:", commitMessage)
 
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.DASH_SPACE.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
 
-        commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+        commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("${dummyPrefix1}-999222 -", commitMessage)
+        assertEquals("${dummyProjectKey1}-999222 -", commitMessage)
     }
 
     fun testNoInfixIsShownWhenInfixIsNotSpecified() {
 
-        val dummyPrefix1 = "FROG"
-        PluginSettingsState.instance.state.jiraProjectPrefixes = listOf(dummyPrefix1)
+        val dummyProjectKey1 = "FROG"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
-        val mockBranch = "fix/${dummyPrefix1}-123"
+        val mockBranch = "fix/${dummyProjectKey1}-123"
 
         val projectService = project.service<MyProjectService>()
 
-        val commitMessage = projectService.getTaskIdFromBranchName(mockBranch)
+        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("(${dummyPrefix1}-123)", commitMessage)
+        assertEquals("(${dummyProjectKey1}-123)", commitMessage)
+    }
 
+    fun testReturnsEmptyStringWhenBranchNameIsNotSpecified() {
+
+        val dummyProjectKey1 = "FROG"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
+
+        val projectService = project.service<MyProjectService>()
+
+        val commitMessage = projectService.getCommitMessageFromBranchName(null)
+
+        assertEquals("", commitMessage)
     }
 }

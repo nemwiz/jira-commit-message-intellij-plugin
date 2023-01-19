@@ -19,7 +19,7 @@ class PluginSettingsConfiguration : Configurable {
         return pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
             pluginSettingsConfigurationPanel.infixTypeDropdown.selectedItem != pluginSettingsState.messageInfixType ||
-            setOf(pluginSettingsConfigurationPanel.prefixesModel.items) != setOf(pluginSettingsState.jiraProjectPrefixes)
+            setOf(pluginSettingsConfigurationPanel.projectKeysModel.items) != setOf(pluginSettingsState.jiraProjectKeys)
     }
 
     override fun apply() {
@@ -31,7 +31,7 @@ class PluginSettingsConfiguration : Configurable {
             .infixTypeDropdown
             .selectedItem
             .toString()
-        pluginSettingsState.jiraProjectPrefixes = pluginSettingsConfigurationPanel.prefixesModel.items
+        pluginSettingsState.jiraProjectKeys = pluginSettingsConfigurationPanel.projectKeysModel.items
     }
 
     override fun getDisplayName(): String {
@@ -49,7 +49,7 @@ class PluginSettingsConfiguration : Configurable {
         pluginSettingsConfigurationPanel
             .infixTypeDropdown
             .selectedItem = pluginSettingsState.messageInfixType
-        pluginSettingsConfigurationPanel.prefixesModel = CollectionListModel(pluginSettingsState.jiraProjectPrefixes)
-        pluginSettingsConfigurationPanel.prefixesList.model = pluginSettingsConfigurationPanel.prefixesModel
+        pluginSettingsConfigurationPanel.projectKeysModel = CollectionListModel(pluginSettingsState.jiraProjectKeys)
+        pluginSettingsConfigurationPanel.projectKeysList.model = pluginSettingsConfigurationPanel.projectKeysModel
     }
 }
