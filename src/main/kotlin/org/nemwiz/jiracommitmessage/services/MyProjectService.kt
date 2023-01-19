@@ -8,20 +8,22 @@ import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 import java.util.*
-import java.util.regex.Matcher
 import java.util.regex.Pattern
+
+private const val DEFAULT_REGEX_FOR_JIRA_PROJECT_ISSUES = "([A-Z]+[_-][0-9]+)"
 
 class MyProjectService(private val project: Project) : Disposable {
 
-    fun getCommitMessageFromBranchName(branchName: String?): String? {
+    fun getCommitMessageFromBranchName(branchName: String?): String {
 
         if (branchName == null) {
             return ""
         }
 
         val jiraProjectKeys = PluginSettingsState.instance.state.jiraProjectKeys
+        val isAutoDetectProjectKey = PluginSettingsState.instance.state.isAutoDetectJiraProjectKey
 
-        if (jiraProjectKeys.isEmpty()) {
+        if (!isAutoDetectProjectKey && jiraProjectKeys.isEmpty()) {
             val notifier = PluginNotifier()
             notifier.showWarning(
                 project,
@@ -36,40 +38,57 @@ class MyProjectService(private val project: Project) : Disposable {
             return ""
         }
 
+        val jiraIssue = extractJiraIssueFromBranch(isAutoDetectProjectKey, branchName, jiraProjectKeys)
+
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
-        jiraProjectKeys.forEach { projectKey ->
-            run {
-                val jiraIssue = branchName?.let { matchBranchNameThroughRegex(projectKey, it) }
+        return if (jiraIssue != null)
+            createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraIssue)
+        else ""
+    }
 
-                return jiraIssue?.let {
-                    if (jiraIssue.find()) {
-                        return createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraIssue)
-                    } else {
-                        return@forEach
-                    }
+    private fun extractJiraIssueFromBranch(
+        isAutoDetectProjectKey: Boolean,
+        branchName: String,
+        jiraProjectKeys: List<String>
+    ): String? {
+
+        var jiraIssue: String? = null
+
+        if (isAutoDetectProjectKey) {
+            val pattern = Pattern.compile(DEFAULT_REGEX_FOR_JIRA_PROJECT_ISSUES).toRegex()
+            val matchedJiraIssue = pattern.find(branchName)
+            jiraIssue = matchedJiraIssue?.value
+        } else {
+            for (projectKey in jiraProjectKeys) {
+                val pattern = Pattern.compile(String.format(Locale.US, "%s+[_-][0-9]+", projectKey)).toRegex()
+                val matchedJiraIssue = pattern.find(branchName)
+
+                if (matchedJiraIssue != null) {
+                    jiraIssue = matchedJiraIssue.value
+                    break
                 }
             }
         }
 
-        return ""
+        return jiraIssue
     }
 
-    private fun createCommitMessage(wrapperType: String, infixType: String, jiraPrefixRegex: Matcher): String {
-        val messageWithWrapper = addWrapper(wrapperType, jiraPrefixRegex)
+    private fun createCommitMessage(wrapperType: String, infixType: String, jiraIssue: String): String {
+        val messageWithWrapper = addWrapper(wrapperType, jiraIssue)
         return addInfix(infixType, messageWithWrapper)
     }
 
-    private fun addWrapper(wrapperType: String, jiraPrefixRegex: Matcher) =
+    private fun addWrapper(wrapperType: String, jiraIssue: String) =
         if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
-            jiraPrefixRegex.group(0)
+            jiraIssue
         } else {
             String.format(
                 Locale.US,
                 "%s%s%s",
                 wrapperType.substring(0, 1),
-                jiraPrefixRegex.group(0),
+                jiraIssue,
                 wrapperType.substring(1, 2)
             )
         }
@@ -85,11 +104,6 @@ class MyProjectService(private val project: Project) : Disposable {
                 infixType
             )
         }
-
-    private fun matchBranchNameThroughRegex(valueToMatch: String?, branchName: String): Matcher? {
-        val pattern = Pattern.compile(String.format(Locale.US, "%s+-[0-9]+", valueToMatch))
-        return pattern.matcher(branchName)
-    }
 
     override fun dispose() {
     }

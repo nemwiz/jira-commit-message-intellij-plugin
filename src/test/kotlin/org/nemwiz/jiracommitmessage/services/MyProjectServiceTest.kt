@@ -14,6 +14,7 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
     fun testShowsWarningPopupWhenJiraProjectKeyIsNotConfigured() {
         PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
 
         mockkConstructor(PluginNotifier::class)
         every { anyConstructed<PluginNotifier>().showWarning(any(), any(), any(), any()) } returns Unit
@@ -37,20 +38,28 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         val dummyProjectKey1 = "PRJT"
         val dummyProjectKey2 = "LEGOS"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1, dummyProjectKey2)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
 
-        val mockBranch = "feat/${dummyProjectKey2}-8172"
+        val mockBranch1 = "feat/${dummyProjectKey2}-8172"
 
         val projectService = project.service<MyProjectService>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        val commitMessage1 = projectService.getCommitMessageFromBranchName(mockBranch1)
 
-        assertEquals("(${dummyProjectKey2}-8172)", commitMessage)
+        assertEquals("(${dummyProjectKey2}-8172)", commitMessage1)
+
+        val mockBranch2 = "feat/${dummyProjectKey1}_123-foo"
+
+        val commitMessage2 = projectService.getCommitMessageFromBranchName(mockBranch2)
+
+        assertEquals("(${dummyProjectKey1}_123)", commitMessage2)
     }
 
     fun testWrapsTheCommitMessageInSelectedWrapper() {
 
         val dummyProjectKey1 = "MARCOM"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
 
         val mockBranch = "this-is-an-awesome-branch-${dummyProjectKey1}-22"
@@ -67,7 +76,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         val dummyProjectKey1 = "MARCOM"
         val dummyProjectKey2 = "FINANCE"
         val dummyProjectKey3 = "LEGOS"
-        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1, dummyProjectKey2, dummyProjectKey3)
+        PluginSettingsState.instance.state.jiraProjectKeys =
+            listOf(dummyProjectKey1, dummyProjectKey2, dummyProjectKey3)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
 
         val mockBranch = "fix/${dummyProjectKey2}-381"
@@ -83,6 +94,7 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val dummyProjectKey1 = "INFIX"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.COLON.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
 
@@ -106,6 +118,7 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val dummyProjectKey1 = "FROG"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -128,6 +141,63 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         val projectService = project.service<MyProjectService>()
 
         val commitMessage = projectService.getCommitMessageFromBranchName(null)
+
+        assertEquals("", commitMessage)
+    }
+
+    fun testAutomaticJiraProjectKeyDetection() {
+        val dummyProjectKey1 = "PRODUCT"
+        PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
+
+        val mockBranch1 = "feat/this-${dummyProjectKey1}-123-is-a-cool-feature"
+
+        val projectService = project.service<MyProjectService>()
+
+        val commitMessage1 = projectService.getCommitMessageFromBranchName(mockBranch1)
+
+        assertEquals("(${dummyProjectKey1}-123)", commitMessage1)
+
+        val mockBranch2 = "fix/${dummyProjectKey1}_123_ui-error"
+
+        val commitMessage2 = projectService.getCommitMessageFromBranchName(mockBranch2)
+
+        assertEquals("(${dummyProjectKey1}_123)", commitMessage2)
+    }
+
+    fun testReturnsEmptyStringWhenBranchNameDoesNotMatchAnyConfiguredJiraProjectKeys() {
+        val dummyProjectKey1 = "MARCOM"
+        val dummyProjectKey2 = "FINANCE"
+        val dummyProjectKey3 = "LEGOS"
+
+        PluginSettingsState.instance.state.jiraProjectKeys =
+            listOf(dummyProjectKey1, dummyProjectKey2, dummyProjectKey3)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
+
+        val mockBranch = "feat/this-does-not-exist"
+
+        val projectService = project.service<MyProjectService>()
+
+        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+
+        assertEquals("", commitMessage)
+    }
+
+    fun testReturnsEmptyStringWhenJiraProjectKeyCantBeAutomaticallyDetectedFromBranchName() {
+        PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
+
+        val mockBranch = "fix/some-bug"
+
+        val projectService = project.service<MyProjectService>()
+
+        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("", commitMessage)
     }

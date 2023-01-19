@@ -18,7 +18,7 @@ class PluginProvider : CommitMessageProvider {
 
         val newCommitMessage = projectService.getCommitMessageFromBranchName(branch?.name)
 
-        return if (newCommitMessage.equals("")) {
+        return if (newCommitMessage == "") {
             oldCommitMessage
         } else {
             newCommitMessage
