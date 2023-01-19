@@ -10,7 +10,7 @@ import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 
-class MyProjectServiceTest : BasePlatformTestCase() {
+class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
     fun testShowsWarningPopupWhenJiraProjectKeyIsNotConfigured() {
         PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
@@ -19,8 +19,8 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         mockkConstructor(PluginNotifier::class)
         every { anyConstructed<PluginNotifier>().showWarning(any(), any(), any(), any()) } returns Unit
 
-        val projectService = project.service<MyProjectService>()
-        val taskId = projectService.getCommitMessageFromBranchName("")
+        val plugin = project.service<JiraCommitMessagePlugin>()
+        val taskId = plugin.getCommitMessageFromBranchName("")
 
         verify {
             anyConstructed<PluginNotifier>().showWarning(
@@ -42,15 +42,15 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch1 = "feat/${dummyProjectKey2}-8172"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage1 = projectService.getCommitMessageFromBranchName(mockBranch1)
+        val commitMessage1 = plugin.getCommitMessageFromBranchName(mockBranch1)
 
         assertEquals("(${dummyProjectKey2}-8172)", commitMessage1)
 
         val mockBranch2 = "feat/${dummyProjectKey1}_123-foo"
 
-        val commitMessage2 = projectService.getCommitMessageFromBranchName(mockBranch2)
+        val commitMessage2 = plugin.getCommitMessageFromBranchName(mockBranch2)
 
         assertEquals("(${dummyProjectKey1}_123)", commitMessage2)
     }
@@ -64,9 +64,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch = "this-is-an-awesome-branch-${dummyProjectKey1}-22"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("{${dummyProjectKey1}-22}", commitMessage)
     }
@@ -83,9 +83,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch = "fix/${dummyProjectKey2}-381"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("${dummyProjectKey2}-381", commitMessage)
     }
@@ -100,16 +100,16 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch = "fix/${dummyProjectKey1}-999222"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        var commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        var commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("{${dummyProjectKey1}-999222}:", commitMessage)
 
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.DASH_SPACE.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
 
-        commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("${dummyProjectKey1}-999222 -", commitMessage)
     }
@@ -124,9 +124,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch = "fix/${dummyProjectKey1}-123"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("(${dummyProjectKey1}-123)", commitMessage)
     }
@@ -138,9 +138,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(null)
+        val commitMessage = plugin.getCommitMessageFromBranchName(null)
 
         assertEquals("", commitMessage)
     }
@@ -154,15 +154,15 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch1 = "feat/this-${dummyProjectKey1}-123-is-a-cool-feature"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage1 = projectService.getCommitMessageFromBranchName(mockBranch1)
+        val commitMessage1 = plugin.getCommitMessageFromBranchName(mockBranch1)
 
         assertEquals("(${dummyProjectKey1}-123)", commitMessage1)
 
         val mockBranch2 = "fix/${dummyProjectKey1}_123_ui-error"
 
-        val commitMessage2 = projectService.getCommitMessageFromBranchName(mockBranch2)
+        val commitMessage2 = plugin.getCommitMessageFromBranchName(mockBranch2)
 
         assertEquals("(${dummyProjectKey1}_123)", commitMessage2)
     }
@@ -180,9 +180,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch = "feat/this-does-not-exist"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("", commitMessage)
     }
@@ -195,9 +195,9 @@ class MyProjectServiceTest : BasePlatformTestCase() {
 
         val mockBranch = "fix/some-bug"
 
-        val projectService = project.service<MyProjectService>()
+        val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessage = projectService.getCommitMessageFromBranchName(mockBranch)
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals("", commitMessage)
     }

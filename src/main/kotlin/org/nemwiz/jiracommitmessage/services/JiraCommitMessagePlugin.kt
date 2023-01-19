@@ -12,7 +12,7 @@ import java.util.regex.Pattern
 
 private const val DEFAULT_REGEX_FOR_JIRA_PROJECT_ISSUES = "([A-Z]+[_-][0-9]+)"
 
-class MyProjectService(private val project: Project) : Disposable {
+class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
     fun getCommitMessageFromBranchName(branchName: String?): String {
 

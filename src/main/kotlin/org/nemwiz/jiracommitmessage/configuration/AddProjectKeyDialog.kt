@@ -27,10 +27,10 @@ class AddProjectKeyDialog : DialogWrapper(true) {
     }
 
     override fun doValidate(): ValidationInfo? {
-        if (addProjectKeyField.text.isNotEmpty()) {
-            return null
+        return if (addProjectKeyField.text.isNotEmpty()) {
+            null
         } else {
-            return ValidationInfo("Project key is required")
+            ValidationInfo("Project key is required")
         }
     }
 }
