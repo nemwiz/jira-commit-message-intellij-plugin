@@ -7,19 +7,19 @@ import com.intellij.openapi.vcs.CommitMessageI
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.ui.Refreshable
 import git4idea.GitUtil
-import org.nemwiz.jiracommitmessage.services.MyProjectService
+import org.nemwiz.jiracommitmessage.services.JiraCommitMessagePlugin
 
 class PluginAction : AnAction() {
     override fun actionPerformed(actionEvent: AnActionEvent) {
         val currentProject = actionEvent.project
 
         if (currentProject != null) {
-            val service = currentProject.service<MyProjectService>()
+            val plugin = currentProject.service<JiraCommitMessagePlugin>()
 
             val repositoryManager = GitUtil.getRepositoryManager(currentProject)
             val branch = repositoryManager.repositories[0].currentBranch
 
-            val newCommitMessage = service.getTaskIdFromBranchName(branch?.name)
+            val newCommitMessage = plugin.getCommitMessageFromBranchName(branch?.name)
             getCommitPanel(actionEvent)?.setCommitMessage(newCommitMessage)
         }
     }

@@ -8,29 +8,29 @@ import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class AddPrefixDialog : DialogWrapper(true) {
+class AddProjectKeyDialog : DialogWrapper(true) {
 
-    lateinit var addPrefixField: JBTextField
+    lateinit var addProjectKeyField: JBTextField
 
     init {
         init()
-        title = "Add JIRA prefix"
+        title = "Add JIRA project key"
     }
 
     override fun createCenterPanel(): JComponent? {
-        addPrefixField = JBTextField()
+        addProjectKeyField = JBTextField()
 
         return FormBuilder.createFormBuilder()
-            .addLabeledComponent(JBLabel("Prefix"), addPrefixField, 1, true)
+            .addLabeledComponent(JBLabel("Project key"), addProjectKeyField, 1, true)
             .addComponentFillVertically(JPanel(), 0)
             .panel
     }
 
     override fun doValidate(): ValidationInfo? {
-        if (addPrefixField.text.isNotEmpty()) {
-            return null
+        return if (addProjectKeyField.text.isNotEmpty()) {
+            null
         } else {
-            return ValidationInfo("Prefix is required")
+            ValidationInfo("Project key is required")
         }
     }
 }

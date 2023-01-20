@@ -7,10 +7,11 @@ Jira commit message plugin helps you by automatically appending JIRA task id to 
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/14310-jira-id-commit-message.svg)](https://plugins.jetbrains.com/plugin/14310-jira-id-commit-message)
 
 <!-- Plugin description -->
-A simple plugin that takes JIRA id from your branch name and appends it to the commit message.
+A simple plugin that takes JIRA issue from your branch name and appends it to the commit message.
+Supports both commit dialog and commit tool window.
 <!-- Plugin description end -->
 
-## Installation
+### Installation
 
 - Using IDE built-in plugin system:
   
@@ -27,41 +28,62 @@ A simple plugin that takes JIRA id from your branch name and appends it to the c
 
 ### Configuration options
 
-- JIRA project prefix - name of your JIRA project, multiple prefixes are supported
-- Bracket/wrapper type - brackets that enclose your commit message
-- Message infix - infix that is appended at the end of your commit message
+You can configure the plugin under `Go to File > Settings > Tools > JIRA Id Commit Message`.
+
+The plugin supports two modes:
+
+1. [Automatic](#automatic)
+2. [Manual](#manual)
+
+For more options see [additional configuration](#additional-configuration)
+
+#### Automatic
+
+When you select `Automatically detect JIRA project key`, the plugin will infer
+your project key from the branch name. Here are some examples:
+
+|        Your branch name         |  Commit message produced by the plugin  |
+|:-------------------------------:|:---------------------------------------:|
+|  feat/this-PRODUCT-123-is-cool  |               PRODUCT-123               |
+|          fix/LEGOS-541          |                LEGOS-541                |
+|       MARCOM_881-feature        |               MARCOM_881                |
+
+#### Manual
+
+If you want to have more control over which project keys the plugin will recognize,
+you can specify your project keys. Multiple keys are supported.
+
+To configure it, unselect `Automatically detect JIRA project key` and add the project keys.
+Here is an example configuration:
+
+|  Configured project key  |        Your branch name         |  Commit message produced by the plugin  |
+|:------------------------:|:-------------------------------:|:---------------------------------------:|
+|         PRODUCT          |  feat/this-PRODUCT-123-is-cool  |               PRODUCT-123               |
+|          LEGOS           |          fix/LEGOS-541          |                LEGOS-541                |
+|          MARCOM          |       MARCOM_881-feature        |               MARCOM_881                |
+
+### Additional configuration
+
+It's possible to specify how the final commit message will look like. 
+Here are some options:
+
+- Bracket/wrapper type - brackets that enclose your commit message. Some examples:
+  - (PRODUCT-123)
+  - {LEGOS-456}
+  - \LEGOS-456\
+- Message infix - infix that is appended at the end of your commit message. Some examples:
+  - PRODUCT-123:
+  - (PRODUCT-123):
+  - LEGOS-456 -
+
 
 ### How to use the plugin
 
+Regardless if you are using the commit dialog or commit tool window, the plugin will automatically populate your commit message text box.
 
-1. [Install the plugin](https://plugins.jetbrains.com/plugin/14310-jira-id-commit-message)
-2. Go to File > Settings > Tools > JIRA Id Commit Message
-3. Add your project prefix (e.g. your JIRA ticket is FROG-123, so your project prefix would be FROG). You can configure multiple prefixes as well
-   
-(Optional) Commit message bracket/wrapper type - allows to customize the bracket or the wrapper for your commit message e.g. you can have a message like `(FROG-123)` or `{FROG-123}` etc.
+In scenarios where you accidentally delete the text, you can always re-generate the message by clicking the frog icon.
+See below screenshot.
 
-(Optional) Commit message infix - appends an infix to your commit message e.g. `(FROG-123):` or `FROG-123 -`
-
-![Example](screenshot1.png)
-
-4. Name your branches in one of the following format. Just an example :)
-    > feature/FROG-123
-    >
-    > feature/FROG-123-whatever
-    >
-    > FROG-123
-    >
-    > FROG-123-whatever
-    >
-    > whatever/feature/FROG-123-whatever
-
-5. Make some changes. When the "Commit changes" dialog is opened your commit message is **automatically** populated with JIRA id from the branch name.
-![Example](screenshot2.JPG)
-
-
-6.(Optional) You can always regenerate the commit message by clicking on the frog icon.
 ![Example](screenshot3.JPG)
 
-Plugin based on the [IntelliJ Platform Plugin Template][template].
-
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
+Plugin based on the [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template).

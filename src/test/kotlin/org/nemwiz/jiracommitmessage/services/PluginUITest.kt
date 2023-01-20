@@ -22,8 +22,8 @@ class PluginUITest {
         val keyboard = Keyboard(robot)
 
         cloneRepositoryAndWaitForProjectToLoad(robot)
-        configurePluginWithJiraPrefixes(robot, keyboard)
-        switchToABranchWithJiraPrefix(robot, keyboard)
+        configurePluginWithJiraProjectKeys(robot, keyboard)
+        switchToABranchWithJiraProjectKey(robot, keyboard)
         makeACodeChangeAndOpenCommitDialog(robot, keyboard)
         verifyCommitMessageAndPluginActions(robot, keyboard)
     }
@@ -54,14 +54,14 @@ class PluginUITest {
             .click()
     }
 
-    private fun switchToABranchWithJiraPrefix(robot: RemoteRobot, keyboard: Keyboard) {
+    private fun switchToABranchWithJiraProjectKey(robot: RemoteRobot, keyboard: Keyboard) {
         robot.find<ComponentFixture>(byXpath("//div[@class='MultipleTextValues']")).click()
         robot.find<JListFixture>(byXpath("//div[@class='MyList']")).clickItem("DUMMY-1234", false)
 
         keyboard.enter()
     }
 
-    private fun configurePluginWithJiraPrefixes(robot: RemoteRobot, keyboard: Keyboard) {
+    private fun configurePluginWithJiraProjectKeys(robot: RemoteRobot, keyboard: Keyboard) {
         robot.find<ComponentFixture>(
             byXpath("//div[contains(@text.key, 'group.FileMenu.text')]"),
             Duration.ofMinutes(TWO_MINUTES)
@@ -102,7 +102,7 @@ class PluginUITest {
         robot.find<ComponentFixture>(byXpath("//div[@text.key='clone.dialog.clone.button']")).click()
 
         waitFor(
-            Duration.ofMinutes(TWO_MINUTES),
+            Duration.ofMinutes(TWO_MINUTES * 3),
             Duration.ofSeconds(10),
             "Project to load",
             { "" },

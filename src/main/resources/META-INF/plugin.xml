@@ -9,9 +9,8 @@
     <depends>Git4Idea</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="org.nemwiz.jiracommitmessage.services.MyApplicationService"/>
         <applicationService serviceImplementation="org.nemwiz.jiracommitmessage.configuration.PluginSettingsState"/>
-        <projectService serviceImplementation="org.nemwiz.jiracommitmessage.services.MyProjectService"/>
+        <projectService serviceImplementation="org.nemwiz.jiracommitmessage.services.JiraCommitMessagePlugin"/>
 
         <applicationConfigurable groupId="tools"
                              displayName="JIRA Id Commit Message"
