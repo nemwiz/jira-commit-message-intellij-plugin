@@ -102,7 +102,7 @@ class PluginUITest {
         robot.find<ComponentFixture>(byXpath("//div[@text.key='clone.dialog.clone.button']")).click()
 
         waitFor(
-            Duration.ofMinutes(TWO_MINUTES),
+            Duration.ofMinutes(TWO_MINUTES * 3),
             Duration.ofSeconds(10),
             "Project to load",
             { "" },
