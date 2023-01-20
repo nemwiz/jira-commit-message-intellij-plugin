@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Added
+- Option to automatically detect JIRA project key
+
 ## [3.1.0] - 2023-01-13
 
 ### Added
