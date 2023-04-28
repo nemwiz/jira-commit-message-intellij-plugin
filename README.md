@@ -9,6 +9,8 @@ Jira commit message plugin helps you by automatically appending JIRA task id to 
 <!-- Plugin description -->
 A simple plugin that takes JIRA issue from your branch name and appends it to the commit message.
 Supports both commit dialog and commit tool window.
+
+This plugin only supports Git version control system.
 <!-- Plugin description end -->
 
 ### Installation
