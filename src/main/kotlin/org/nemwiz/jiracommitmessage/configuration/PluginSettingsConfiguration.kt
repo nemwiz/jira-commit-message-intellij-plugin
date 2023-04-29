@@ -19,6 +19,7 @@ class PluginSettingsConfiguration : Configurable {
         return pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
             pluginSettingsConfigurationPanel.infixTypeDropdown.selectedItem != pluginSettingsState.messageInfixType ||
+            pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected != pluginSettingsState.isConventionalCommit ||
             pluginSettingsConfigurationPanel.isAutoDetectJiraProjectKeyCheckbox.isSelected != pluginSettingsState.isAutoDetectJiraProjectKey ||
             setOf(pluginSettingsConfigurationPanel.projectKeysModel.items) != setOf(pluginSettingsState.jiraProjectKeys)
     }
@@ -32,6 +33,8 @@ class PluginSettingsConfiguration : Configurable {
             .infixTypeDropdown
             .selectedItem
             .toString()
+        pluginSettingsState.isConventionalCommit =
+            pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected
         pluginSettingsState.isAutoDetectJiraProjectKey =
             pluginSettingsConfigurationPanel.isAutoDetectJiraProjectKeyCheckbox.isSelected
         pluginSettingsState.jiraProjectKeys = pluginSettingsConfigurationPanel.projectKeysModel.items
@@ -52,6 +55,9 @@ class PluginSettingsConfiguration : Configurable {
         pluginSettingsConfigurationPanel
             .infixTypeDropdown
             .selectedItem = pluginSettingsState.messageInfixType
+        pluginSettingsConfigurationPanel
+            .isConventionalCommitCheckbox
+            .isSelected = pluginSettingsState.isConventionalCommit
         pluginSettingsConfigurationPanel
             .isAutoDetectJiraProjectKeyCheckbox
             .isSelected = pluginSettingsState.isAutoDetectJiraProjectKey

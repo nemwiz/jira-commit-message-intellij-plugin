@@ -11,6 +11,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 private const val DEFAULT_REGEX_FOR_JIRA_PROJECT_ISSUES = "([A-Z]+[_-][0-9]+)"
+private const val CONVENTIONAL_COMMITS_REGEX = "(feat|fix|build|ci|chore|docs|perf|refactor|style|test)"
 
 class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
@@ -38,13 +39,16 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
             return ""
         }
 
+        val isConventionalCommit = PluginSettingsState.instance.state.isConventionalCommit
+
         val jiraIssue = extractJiraIssueFromBranch(isAutoDetectProjectKey, branchName, jiraProjectKeys)
+        val conventionalCommitType = extractConventionalCommitType(isConventionalCommit, branchName)
 
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
         return if (jiraIssue != null)
-            createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraIssue)
+            createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraIssue, conventionalCommitType)
         else ""
     }
 
@@ -75,9 +79,24 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
         return jiraIssue
     }
 
-    private fun createCommitMessage(wrapperType: String, infixType: String, jiraIssue: String): String {
+    private fun extractConventionalCommitType(isConventionalCommit: Boolean, branchName: String): String? {
+        if (isConventionalCommit) {
+            val pattern = Pattern.compile(CONVENTIONAL_COMMITS_REGEX).toRegex()
+            val matchedConventionalType = pattern.find(branchName)
+            return matchedConventionalType?.value
+        }
+        return null
+    }
+
+    private fun createCommitMessage(
+        wrapperType: String,
+        infixType: String,
+        jiraIssue: String,
+        conventionalCommitType: String?
+    ): String {
         val messageWithWrapper = addWrapper(wrapperType, jiraIssue)
-        return addInfix(infixType, messageWithWrapper)
+        val messageWithInfix = addInfix(infixType, messageWithWrapper)
+        return addConventionalCommitType(conventionalCommitType, messageWithInfix)
     }
 
     private fun addWrapper(wrapperType: String, jiraIssue: String) =
@@ -104,6 +123,12 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
                 infixType
             )
         }
+
+    private fun addConventionalCommitType(conventionalCommitType: String?, commitMessage: String): String =
+        if (conventionalCommitType != null) {
+            String.format(Locale.US, "%s%s", conventionalCommitType, commitMessage)
+        } else commitMessage
+
 
     override fun dispose() {
     }

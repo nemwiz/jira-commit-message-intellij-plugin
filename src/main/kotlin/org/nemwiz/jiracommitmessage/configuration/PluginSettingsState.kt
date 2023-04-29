@@ -28,6 +28,7 @@ class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginS
         var messageWrapperType = MessageWrapperType.ROUND.type
         var messageInfixType = InfixType.NO_INFIX.type
         var isAutoDetectJiraProjectKey = false
+        var isConventionalCommit = false
         var jiraProjectKeys = emptyList<String>()
     }
 }

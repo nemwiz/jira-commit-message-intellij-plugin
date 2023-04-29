@@ -8,9 +8,9 @@ Jira commit message plugin helps you by automatically appending JIRA task id to 
 
 <!-- Plugin description -->
 A simple plugin that takes JIRA issue from your branch name and appends it to the commit message.
-Supports both commit dialog and commit tool window.
+Supports both commit dialog and commit tool window. Optional support for conventional commits.
 
-This plugin only supports Git version control system.
+This plugin works only with Git version control system.
 <!-- Plugin description end -->
 
 ### Installation
@@ -63,6 +63,21 @@ Here is an example configuration:
 |         PRODUCT          |  feat/this-PRODUCT-123-is-cool  |               PRODUCT-123               |
 |          LEGOS           |          fix/LEGOS-541          |                LEGOS-541                |
 |          MARCOM          |       MARCOM_881-feature        |               MARCOM_881                |
+
+#### Conventional commits support
+
+Some projects follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) for easier
+version management of their projects. You can enable it in the settings screen.
+
+When configured, the plugin will automatically detect if you have any of the conventional commit prefixes in your branch
+name, and it will add that to the commit message. 
+Here are some examples:
+
+|       Your branch name        | Commit message produced by the plugin |
+|:-----------------------------:|:-------------------------------------:|
+| feat/this-PRODUCT-123-is-cool |          feat(PRODUCT-123):           |
+|         fix/LEGOS-541         |            fix(LEGOS-541):            |
+|    docs-MARCOM_881-feature    |           docs(MARCOM_881):           |
 
 ### Additional configuration
 
