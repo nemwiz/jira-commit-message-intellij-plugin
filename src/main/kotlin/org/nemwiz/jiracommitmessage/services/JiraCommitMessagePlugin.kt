@@ -47,9 +47,11 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
-        return if (jiraIssue != null)
-            createCommitMessage(selectedMessageWrapper, selectedInfixType, jiraIssue, conventionalCommitType)
-        else ""
+        return CommitMessageBuilder(jiraIssue)
+            .withWrapper(selectedMessageWrapper)
+            .withInfix(selectedInfixType)
+            .withConventionalCommit(conventionalCommitType)
+            .getCommitMessage()
     }
 
     private fun extractJiraIssueFromBranch(
@@ -87,48 +89,6 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
         }
         return null
     }
-
-    private fun createCommitMessage(
-        wrapperType: String,
-        infixType: String,
-        jiraIssue: String,
-        conventionalCommitType: String?
-    ): String {
-        val messageWithWrapper = addWrapper(wrapperType, jiraIssue)
-        val messageWithInfix = addInfix(infixType, messageWithWrapper)
-        return addConventionalCommitType(conventionalCommitType, messageWithInfix)
-    }
-
-    private fun addWrapper(wrapperType: String, jiraIssue: String) =
-        if (wrapperType == MessageWrapperType.NO_WRAPPER.type) {
-            jiraIssue
-        } else {
-            String.format(
-                Locale.US,
-                "%s%s%s",
-                wrapperType.substring(0, 1),
-                jiraIssue,
-                wrapperType.substring(1, 2)
-            )
-        }
-
-    private fun addInfix(infixType: String, commitMessage: String) =
-        if (infixType == InfixType.NO_INFIX.type) {
-            commitMessage
-        } else {
-            String.format(
-                Locale.US,
-                "%s%s",
-                commitMessage,
-                infixType
-            )
-        }
-
-    private fun addConventionalCommitType(conventionalCommitType: String?, commitMessage: String): String =
-        if (conventionalCommitType != null) {
-            String.format(Locale.US, "%s%s", conventionalCommitType, commitMessage)
-        } else commitMessage
-
 
     override fun dispose() {
     }
