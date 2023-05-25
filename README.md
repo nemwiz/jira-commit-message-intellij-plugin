@@ -88,6 +88,10 @@ Here are some options:
   - (PRODUCT-123)
   - {LEGOS-456}
   - \LEGOS-456\
+- Message prefix - prefix that is added at the beginning of your commit message. Some examples:
+  - #PRODUCT-123
+  - :PRODUCT-123
+  - -(LEGOS-456)
 - Message infix - infix that is appended at the end of your commit message. Some examples:
   - PRODUCT-123:
   - (PRODUCT-123):
