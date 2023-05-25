@@ -1,11 +1,11 @@
-## GitHub Actions Workflow for launching UI tests on Linux, Windows, and Mac in the following steps:
-## - prepare and launch IDE with your plugin and robot-server plugin, which is needed to interact with UI
-## - wait for IDE to start
-## - run UI tests with separate Gradle task
-##
-## Please check https://github.com/JetBrains/intellij-ui-test-robot for information about UI tests with IntelliJ Platform
-##
-## Workflow is triggered manually.
+# GitHub Actions Workflow for launching UI tests on Linux, Windows, and Mac in the following steps:
+# - prepare and launch IDE with your plugin and robot-server plugin, which is needed to interact with UI
+# - wait for IDE to start
+# - run UI tests with separate Gradle task
+#
+# Please check https://github.com/JetBrains/intellij-ui-test-robot for information about UI tests with IntelliJ Platform
+#
+# Workflow is triggered manually.
 
 name: Run UI Tests
 on:
@@ -23,13 +23,11 @@ jobs:
             runIde: |
               export DISPLAY=:99.0
               Xvfb -ac :99 -screen 0 1920x1080x16 &
-              mkdir -p ui-test-example/build/reports
-              gradle runIdeForUiTests > ui-test-example/build/reports/idea.log &
-            reportName: ui-test-fails-report-linux
-    #          - os: windows-latest
-    #            runIde: start gradlew.bat runIdeForUiTests
-    #          - os: macos-latest
-    #            runIde: ./gradlew runIdeForUiTests &
+              gradle runIdeForUiTests &
+          - os: windows-latest
+            runIde: start gradlew.bat runIdeForUiTests
+          - os: macos-latest
+            runIde: ./gradlew runIdeForUiTests &
 
     steps:
 
@@ -57,16 +55,5 @@ jobs:
           retry-delay: 30s
 
       # Run tests
-      # TODO - get a proper stacktrace
-      # TODO - run UI tests on every push
       - name: Tests
         run: ./gradlew test
-
-      # Show report for debugging purposes
-      - name: Save fails report
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.reportName }}
-          path: |
-            ui-test-example/build/reports
