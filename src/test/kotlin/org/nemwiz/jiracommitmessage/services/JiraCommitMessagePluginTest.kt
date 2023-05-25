@@ -8,6 +8,7 @@ import io.mockk.verify
 import org.nemwiz.jiracommitmessage.configuration.InfixType
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
+import org.nemwiz.jiracommitmessage.configuration.PrefixType
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 
 class JiraCommitMessagePluginTest : BasePlatformTestCase() {
@@ -61,6 +62,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
 
         val mockBranch = "this-is-an-awesome-branch-${dummyProjectKey1}-22"
 
@@ -80,6 +82,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
             listOf(dummyProjectKey1, dummyProjectKey2, dummyProjectKey3)
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
 
         val mockBranch = "fix/${dummyProjectKey2}-381"
 
@@ -95,6 +98,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         val dummyProjectKey1 = "INFIX"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.COLON.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
 
@@ -119,6 +123,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         val dummyProjectKey1 = "FROG"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -135,6 +140,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val dummyProjectKey1 = "FROG"
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -149,6 +155,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         val dummyProjectKey1 = "PRODUCT"
         PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -175,6 +182,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         PluginSettingsState.instance.state.jiraProjectKeys =
             listOf(dummyProjectKey1, dummyProjectKey2, dummyProjectKey3)
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -190,6 +198,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
     fun testReturnsEmptyStringWhenJiraProjectKeyCantBeAutomaticallyDetectedFromBranchName() {
         PluginSettingsState.instance.state.jiraProjectKeys = emptyList()
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -208,6 +217,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
         PluginSettingsState.instance.state.isConventionalCommit = true
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -229,6 +239,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
     fun testReturnConventionalCommitInfixWhenConvetionalCommitsOptionIsOnAndAutomaticDetectIsOn() {
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
         PluginSettingsState.instance.state.isConventionalCommit = true
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.COLON.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -250,6 +261,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
     fun testDoesNotAddConventionalCommitInfixWhenConventionalCommitsAreNotOn() {
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
         PluginSettingsState.instance.state.isConventionalCommit = false
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.BOX.type
 
@@ -265,6 +277,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
     fun testOnlyAddsInfixFromTheSupportedConventionalCommitInfix() {
         PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
         PluginSettingsState.instance.state.isConventionalCommit = true
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.ROUND.type
 
@@ -303,5 +316,53 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         assertTrue(commitMessages.contains("perf(PROJ-123)"))
         assertTrue(commitMessages.contains("refactor(PROJ-123)"))
         assertTrue(commitMessages.contains("style(PROJ-123)"))
+    }
+
+    fun testDoesNotAddPrefixWhenPrefixIsNotSet() {
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.state.isConventionalCommit = false
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.BOX.type
+
+        val mockBranch = "test/awesome-PLUGIN-831"
+
+        val plugin = project.service<JiraCommitMessagePlugin>()
+
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
+
+        assertEquals("[PLUGIN-831]", commitMessage)
+    }
+
+    fun testAddsPrefixWhenMessagePrefixIsSet() {
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.state.isConventionalCommit = false
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.COLON.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.HASH.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
+
+        val mockBranch = "test/awesome-PLUGIN-831"
+
+        val plugin = project.service<JiraCommitMessagePlugin>()
+
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
+
+        assertEquals("#PLUGIN-831:", commitMessage)
+    }
+
+    fun testAlwaysAddsPrefixToTheBeginningOfTheMessageWhenPrefixIsSet() {
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.state.isConventionalCommit = true
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.COLON.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
+
+        val mockBranch = "test/awesome-PLUGIN-831"
+
+        val plugin = project.service<JiraCommitMessagePlugin>()
+
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
+
+        assertEquals(":test{PLUGIN-831}", commitMessage)
     }
 }

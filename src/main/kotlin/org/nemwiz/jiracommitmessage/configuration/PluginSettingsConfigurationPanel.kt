@@ -10,13 +10,14 @@ import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-private const val JIRA_PROJECT_KEYS_LABEL = 8
-private const val JIRA_PROJECT_KEYS_LIST = 9
+private const val JIRA_PROJECT_KEYS_LABEL = 10
+private const val JIRA_PROJECT_KEYS_LIST = 11
 
 class PluginSettingsConfigurationPanel {
 
     var mainPanel: JPanel
     var messageWrapperTypeDropdown: ComboBox<String> = ComboBox()
+    var prefixTypeDropdown: ComboBox<String> = ComboBox()
     var infixTypeDropdown: ComboBox<String> = ComboBox()
     private var projectKeys = PluginSettingsState.instance.state.jiraProjectKeys
     var isAutoDetectJiraProjectKeyCheckbox: JBCheckBox = JBCheckBox()
@@ -35,6 +36,11 @@ class PluginSettingsConfigurationPanel {
         messageWrapperTypeDropdown.addItem(MessageWrapperType.VERTICAL_SLASH.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.FORWARD_SLASH.type)
         messageWrapperTypeDropdown.addItem(MessageWrapperType.BACKSLASH.type)
+
+        prefixTypeDropdown.addItem(PrefixType.NO_PREFIX.type)
+        prefixTypeDropdown.addItem(PrefixType.DASH.type)
+        prefixTypeDropdown.addItem(PrefixType.COLON.type)
+        prefixTypeDropdown.addItem(PrefixType.HASH.type)
 
         infixTypeDropdown.addItem(InfixType.NO_INFIX.type)
         infixTypeDropdown.addItem(InfixType.DASH.type)
@@ -66,6 +72,7 @@ class PluginSettingsConfigurationPanel {
 
         mainPanel = FormBuilder.createFormBuilder()
             .addLabeledComponent(JBLabel("Commit message bracket/wrapper type"), messageWrapperTypeDropdown, 1, false)
+            .addLabeledComponent(JBLabel("Commit message prefix"), prefixTypeDropdown, 1, false)
             .addLabeledComponent(JBLabel("Commit message infix"), infixTypeDropdown, 1, false)
             .addLabeledComponent(
                 JBLabel("Automatically detect conventional commits"),

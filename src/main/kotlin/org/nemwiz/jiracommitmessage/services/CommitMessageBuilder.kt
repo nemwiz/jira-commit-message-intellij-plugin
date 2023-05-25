@@ -2,6 +2,7 @@ package org.nemwiz.jiracommitmessage.services
 
 import org.nemwiz.jiracommitmessage.configuration.InfixType
 import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
+import org.nemwiz.jiracommitmessage.configuration.PrefixType
 import java.util.*
 
 class CommitMessageBuilder(private val jiraIssue: String?) {
@@ -20,6 +21,18 @@ class CommitMessageBuilder(private val jiraIssue: String?) {
                 wrapper.substring(0, 1),
                 commitMessage,
                 wrapper.substring(1, 2)
+            )
+        }
+        return this
+    }
+
+    fun withPrefix(prefix: String): CommitMessageBuilder {
+        if (prefix !== PrefixType.NO_PREFIX.type) {
+            commitMessage = String.format(
+                Locale.US,
+                "%s%s",
+                prefix,
+                commitMessage
             )
         }
         return this

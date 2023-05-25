@@ -6,6 +6,7 @@
 
 ### Added
 - Support for conventional commits based on branch name
+- Ability to specify message prefix
 
 ## [3.2.0] - 2023-01-27
 

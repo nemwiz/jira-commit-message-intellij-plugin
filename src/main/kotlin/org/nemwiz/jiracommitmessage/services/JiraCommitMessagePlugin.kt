@@ -3,8 +3,6 @@ package org.nemwiz.jiracommitmessage.services
 import com.intellij.notification.BrowseNotificationAction
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
-import org.nemwiz.jiracommitmessage.configuration.InfixType
-import org.nemwiz.jiracommitmessage.configuration.MessageWrapperType
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 import java.util.*
@@ -45,12 +43,14 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
         val conventionalCommitType = extractConventionalCommitType(isConventionalCommit, branchName)
 
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
+        val selectedPrefixType = PluginSettingsState.instance.state.messagePrefixType
         val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
 
         return CommitMessageBuilder(jiraIssue)
             .withWrapper(selectedMessageWrapper)
             .withInfix(selectedInfixType)
             .withConventionalCommit(conventionalCommitType)
+            .withPrefix(selectedPrefixType)
             .getCommitMessage()
     }
 

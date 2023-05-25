@@ -18,6 +18,7 @@ class PluginSettingsConfiguration : Configurable {
     override fun isModified(): Boolean {
         return pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
+            pluginSettingsConfigurationPanel.prefixTypeDropdown.selectedItem != pluginSettingsState.messagePrefixType ||
             pluginSettingsConfigurationPanel.infixTypeDropdown.selectedItem != pluginSettingsState.messageInfixType ||
             pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected != pluginSettingsState.isConventionalCommit ||
             pluginSettingsConfigurationPanel.isAutoDetectJiraProjectKeyCheckbox.isSelected != pluginSettingsState.isAutoDetectJiraProjectKey ||
@@ -27,6 +28,10 @@ class PluginSettingsConfiguration : Configurable {
     override fun apply() {
         pluginSettingsState.messageWrapperType = pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown
+            .selectedItem
+            .toString()
+        pluginSettingsState.messagePrefixType = pluginSettingsConfigurationPanel
+            .prefixTypeDropdown
             .selectedItem
             .toString()
         pluginSettingsState.messageInfixType = pluginSettingsConfigurationPanel
@@ -52,6 +57,9 @@ class PluginSettingsConfiguration : Configurable {
         pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown
             .selectedItem = pluginSettingsState.messageWrapperType
+        pluginSettingsConfigurationPanel
+            .prefixTypeDropdown
+            .selectedItem = pluginSettingsState.messagePrefixType
         pluginSettingsConfigurationPanel
             .infixTypeDropdown
             .selectedItem = pluginSettingsState.messageInfixType
