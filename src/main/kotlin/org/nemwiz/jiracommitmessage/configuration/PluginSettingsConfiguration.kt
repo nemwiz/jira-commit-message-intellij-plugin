@@ -18,7 +18,9 @@ class PluginSettingsConfiguration : Configurable {
     override fun isModified(): Boolean {
         return pluginSettingsConfigurationPanel
             .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
+            pluginSettingsConfigurationPanel.prefixTypeDropdown.selectedItem != pluginSettingsState.messagePrefixType ||
             pluginSettingsConfigurationPanel.infixTypeDropdown.selectedItem != pluginSettingsState.messageInfixType ||
+            pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected != pluginSettingsState.isConventionalCommit ||
             pluginSettingsConfigurationPanel.isAutoDetectJiraProjectKeyCheckbox.isSelected != pluginSettingsState.isAutoDetectJiraProjectKey ||
             setOf(pluginSettingsConfigurationPanel.projectKeysModel.items) != setOf(pluginSettingsState.jiraProjectKeys)
     }
@@ -28,10 +30,16 @@ class PluginSettingsConfiguration : Configurable {
             .messageWrapperTypeDropdown
             .selectedItem
             .toString()
+        pluginSettingsState.messagePrefixType = pluginSettingsConfigurationPanel
+            .prefixTypeDropdown
+            .selectedItem
+            .toString()
         pluginSettingsState.messageInfixType = pluginSettingsConfigurationPanel
             .infixTypeDropdown
             .selectedItem
             .toString()
+        pluginSettingsState.isConventionalCommit =
+            pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected
         pluginSettingsState.isAutoDetectJiraProjectKey =
             pluginSettingsConfigurationPanel.isAutoDetectJiraProjectKeyCheckbox.isSelected
         pluginSettingsState.jiraProjectKeys = pluginSettingsConfigurationPanel.projectKeysModel.items
@@ -50,8 +58,14 @@ class PluginSettingsConfiguration : Configurable {
             .messageWrapperTypeDropdown
             .selectedItem = pluginSettingsState.messageWrapperType
         pluginSettingsConfigurationPanel
+            .prefixTypeDropdown
+            .selectedItem = pluginSettingsState.messagePrefixType
+        pluginSettingsConfigurationPanel
             .infixTypeDropdown
             .selectedItem = pluginSettingsState.messageInfixType
+        pluginSettingsConfigurationPanel
+            .isConventionalCommitCheckbox
+            .isSelected = pluginSettingsState.isConventionalCommit
         pluginSettingsConfigurationPanel
             .isAutoDetectJiraProjectKeyCheckbox
             .isSelected = pluginSettingsState.isAutoDetectJiraProjectKey
