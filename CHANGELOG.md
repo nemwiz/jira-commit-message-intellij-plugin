@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [3.3.0] - 2023-05-31
+
 ### Added
 - Support for conventional commits based on branch name
 - Ability to specify message prefix
@@ -67,7 +69,8 @@
 - Support up until IntelliJ version 2020.2
 - Migrated project to [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.2.0...HEAD
+[Unreleased]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.0.0...v3.0.1
