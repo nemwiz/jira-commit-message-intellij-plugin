@@ -70,8 +70,8 @@ Here is an example configuration:
 Some projects follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) for easier
 version management of their projects. You can enable it in the settings screen.
 
-When configured, the plugin will automatically detect if you have any of the conventional commit prefixes in your branch
-name, and it will add that to the commit message. 
+When configured, the plugin will automatically detect if your branch name starts with any of the conventional commit prefixes 
+and it will add it to the commit message. Always place the conventional commit prefix at the beginning of the branch name. 
 Here are some examples:
 
 |       Your branch name        | Commit message produced by the plugin |

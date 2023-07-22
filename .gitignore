@@ -6,3 +6,4 @@ build
 .idea/*.xml
 .idea/.gitignore
 !.idea/gradle.xml
+.idea/*.iml
