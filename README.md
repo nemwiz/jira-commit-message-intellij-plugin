@@ -53,7 +53,8 @@ your project key from the branch name. Here are some examples:
 #### Manual
 
 If you want to have more control over which project keys the plugin will recognize,
-you can specify your project keys. Multiple keys are supported.
+you can specify your project keys. Multiple keys are supported. 
+The project key has to be specified in ***uppercase*** as per [Atlassian convention](https://confluence.atlassian.com/adminjiraserver/changing-the-project-key-format-938847081.html).
 
 To configure it, unselect `Automatically detect JIRA project key` and add the project keys.
 Here is an example configuration:

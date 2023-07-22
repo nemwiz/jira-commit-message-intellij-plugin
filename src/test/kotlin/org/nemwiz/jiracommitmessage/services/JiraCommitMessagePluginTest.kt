@@ -299,7 +299,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val plugin = project.service<JiraCommitMessagePlugin>()
 
-        val commitMessages = branches.map { b ->  plugin.getCommitMessageFromBranchName(b)}
+        val commitMessages = branches.map { b -> plugin.getCommitMessageFromBranchName(b) }
 
         assertEquals(branches.size, commitMessages.size)
 
@@ -364,5 +364,47 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
         assertEquals(":test{PLUGIN-831}", commitMessage)
+    }
+
+    fun testAlwaysUppercaseProjectKeyFromBranchNameWhenProjectKeysAreSpecifiedManually() {
+
+        val dummyProjectKey1 = "LEGOS"
+        PluginSettingsState.instance.state.jiraProjectKeys = listOf(dummyProjectKey1)
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = false
+        PluginSettingsState.instance.state.isConventionalCommit = false
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
+
+        val mockBranchWithLowercaseProjectKey = "test/awesome-legos-831"
+
+        val plugin = project.service<JiraCommitMessagePlugin>()
+
+        var commitMessage = plugin.getCommitMessageFromBranchName(mockBranchWithLowercaseProjectKey)
+
+        assertEquals("{LEGOS-831}", commitMessage)
+
+        PluginSettingsState.instance.state.isConventionalCommit = true
+
+        commitMessage = plugin.getCommitMessageFromBranchName(mockBranchWithLowercaseProjectKey)
+
+        assertEquals("test{LEGOS-831}", commitMessage)
+    }
+
+    fun testDoesNotUppercaseProjectKeyAndReturnsEmptyStringWhenProjectKeyIsLowercaseInBranchNameAndAutoDetectJiraOptionIsTurnedOn() {
+
+        PluginSettingsState.instance.state.isAutoDetectJiraProjectKey = true
+        PluginSettingsState.instance.state.isConventionalCommit = false
+        PluginSettingsState.instance.pluginState.messageInfixType = InfixType.NO_INFIX.type
+        PluginSettingsState.instance.pluginState.messagePrefixType = PrefixType.NO_PREFIX.type
+        PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.CURLY.type
+
+        val mockBranchWithLowercaseProjectKey = "test/awesome-legos-831"
+
+        val plugin = project.service<JiraCommitMessagePlugin>()
+
+        val commitMessage = plugin.getCommitMessageFromBranchName(mockBranchWithLowercaseProjectKey)
+
+        assertEquals("", commitMessage)
     }
 }

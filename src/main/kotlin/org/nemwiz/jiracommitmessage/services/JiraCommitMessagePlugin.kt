@@ -68,11 +68,16 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
             jiraIssue = matchedJiraIssue?.value
         } else {
             for (projectKey in jiraProjectKeys) {
-                val pattern = Pattern.compile(String.format(Locale.US, "%s+[_-][0-9]+", projectKey)).toRegex()
-                val matchedJiraIssue = pattern.find(branchName)
+                val pattern = createPatternRegex(projectKey)
+                var matchedJiraIssue = pattern.find(branchName)
+
+                if (matchedJiraIssue == null) {
+                    val lowercasePattern = createPatternRegex(projectKey.lowercase())
+                    matchedJiraIssue = lowercasePattern.find(branchName)
+                }
 
                 if (matchedJiraIssue != null) {
-                    jiraIssue = matchedJiraIssue.value
+                    jiraIssue = matchedJiraIssue.value.uppercase()
                     break
                 }
             }
@@ -80,6 +85,9 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
         return jiraIssue
     }
+
+    private fun createPatternRegex(projectKey: String) =
+        Pattern.compile(String.format(Locale.US, "%s+[_-][0-9]+", projectKey)).toRegex()
 
     private fun extractConventionalCommitType(isConventionalCommit: Boolean, branchName: String): String? {
         if (isConventionalCommit) {
