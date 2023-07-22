@@ -10,7 +10,7 @@ class PluginSettingsConfiguration : Configurable {
     private val pluginSettingsState
         get() = PluginSettingsState.instance.state
 
-    override fun createComponent(): JComponent? {
+    override fun createComponent(): JComponent {
         pluginSettingsConfigurationPanel = PluginSettingsConfigurationPanel()
         return pluginSettingsConfigurationPanel.mainPanel
     }

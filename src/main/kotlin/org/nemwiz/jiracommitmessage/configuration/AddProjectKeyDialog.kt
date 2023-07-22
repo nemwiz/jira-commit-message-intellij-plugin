@@ -14,7 +14,7 @@ class AddProjectKeyDialog : DialogWrapper(true) {
 
     init {
         init()
-        title = "Add JIRA project key"
+        title = "Add JIRA Project Key"
     }
 
     override fun createCenterPanel(): JComponent? {
