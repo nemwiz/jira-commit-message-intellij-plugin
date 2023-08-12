@@ -97,6 +97,7 @@ Here are some options:
   - PRODUCT-123:
   - (PRODUCT-123):
   - LEGOS-456 -
+- Prepend JIRA issue to existing commit message on plugin action click. See [#74](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/74)
 
 
 ### How to use the plugin

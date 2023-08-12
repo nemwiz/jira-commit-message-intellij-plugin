@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+### Added
+- Prepend JIRA issue to existing commit message when clicking plugin action button [#74](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/74)
+- Always uppercase JIRA project key even when branch is lowercase [#70](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/70)
+
+### Changed
+- Conventional commit will only be picked up if a branch name starts with a conventional commit prefix [#71](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/71)
+
 ## [3.3.0] - 2023-05-31
 
 ### Added
