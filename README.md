@@ -53,7 +53,8 @@ your project key from the branch name. Here are some examples:
 #### Manual
 
 If you want to have more control over which project keys the plugin will recognize,
-you can specify your project keys. Multiple keys are supported.
+you can specify your project keys. Multiple keys are supported. 
+The project key has to be specified in ***uppercase*** as per [Atlassian convention](https://confluence.atlassian.com/adminjiraserver/changing-the-project-key-format-938847081.html).
 
 To configure it, unselect `Automatically detect JIRA project key` and add the project keys.
 Here is an example configuration:
@@ -69,8 +70,8 @@ Here is an example configuration:
 Some projects follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) for easier
 version management of their projects. You can enable it in the settings screen.
 
-When configured, the plugin will automatically detect if you have any of the conventional commit prefixes in your branch
-name, and it will add that to the commit message. 
+When configured, the plugin will automatically detect if your branch name starts with any of the conventional commit prefixes 
+and it will add it to the commit message. Always place the conventional commit prefix at the beginning of the branch name. 
 Here are some examples:
 
 |       Your branch name        | Commit message produced by the plugin |
@@ -96,6 +97,7 @@ Here are some options:
   - PRODUCT-123:
   - (PRODUCT-123):
   - LEGOS-456 -
+- Prepend JIRA issue to existing commit message on plugin action click. See [#74](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/74)
 
 
 ### How to use the plugin

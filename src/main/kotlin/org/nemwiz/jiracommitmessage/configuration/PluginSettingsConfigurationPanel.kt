@@ -10,8 +10,8 @@ import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-private const val JIRA_PROJECT_KEYS_LABEL = 10
-private const val JIRA_PROJECT_KEYS_LIST = 11
+private const val JIRA_PROJECT_KEYS_LABEL = 12
+private const val JIRA_PROJECT_KEYS_LIST = 13
 
 class PluginSettingsConfigurationPanel {
 
@@ -22,6 +22,7 @@ class PluginSettingsConfigurationPanel {
     private var projectKeys = PluginSettingsState.instance.state.jiraProjectKeys
     var isAutoDetectJiraProjectKeyCheckbox: JBCheckBox = JBCheckBox()
     var isConventionalCommitCheckbox: JBCheckBox = JBCheckBox()
+    var prependJiraIssueOnPluginActionClickCheckbox: JBCheckBox = JBCheckBox()
     var projectKeysList: JBList<String>
     var projectKeysModel: CollectionListModel<String>
     private var toolbar: ToolbarDecorator
@@ -74,6 +75,12 @@ class PluginSettingsConfigurationPanel {
             .addLabeledComponent(JBLabel("Commit message bracket/wrapper type"), messageWrapperTypeDropdown, 1, false)
             .addLabeledComponent(JBLabel("Commit message prefix"), prefixTypeDropdown, 1, false)
             .addLabeledComponent(JBLabel("Commit message infix"), infixTypeDropdown, 1, false)
+            .addLabeledComponent(
+                JBLabel("Prepend JIRA issue to existing commit message on plugin action click"),
+                prependJiraIssueOnPluginActionClickCheckbox,
+                1,
+                false
+            )
             .addLabeledComponent(
                 JBLabel("Automatically detect conventional commits"),
                 isConventionalCommitCheckbox,

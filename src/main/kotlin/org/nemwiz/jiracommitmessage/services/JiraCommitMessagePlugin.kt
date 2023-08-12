@@ -2,18 +2,25 @@ package org.nemwiz.jiracommitmessage.services
 
 import com.intellij.notification.BrowseNotificationAction
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.diagnostic.logger
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 import java.util.*
 import java.util.regex.Pattern
 
-private const val DEFAULT_REGEX_FOR_JIRA_PROJECT_ISSUES = "([A-Z]+[_-][0-9]+)"
-private const val CONVENTIONAL_COMMITS_REGEX = "(feat|fix|build|ci|chore|docs|perf|refactor|style|test)"
+private val LOG = logger<JiraCommitMessagePlugin>()
 
+private const val DEFAULT_REGEX_FOR_JIRA_PROJECT_ISSUES = "([A-Z]+[_-][0-9]+)"
+private const val CONVENTIONAL_COMMITS_REGEX = "(feat|fix|build|ci|chore|docs|perf|refactor|style|test)*"
+
+@Service(Service.Level.PROJECT)
 class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
     fun getCommitMessageFromBranchName(branchName: String?): String {
+
+        LOG.info("Extracting JIRA project key from branch name -> $branchName")
 
         if (branchName == null) {
             return ""
@@ -21,6 +28,8 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
         val jiraProjectKeys = PluginSettingsState.instance.state.jiraProjectKeys
         val isAutoDetectProjectKey = PluginSettingsState.instance.state.isAutoDetectJiraProjectKey
+
+        LOG.info("JIRA Commit message plugin settings: jiraProjectKeys -> $jiraProjectKeys, isAutoDetectProjectKey -> $isAutoDetectProjectKey")
 
         if (!isAutoDetectProjectKey && jiraProjectKeys.isEmpty()) {
             val notifier = PluginNotifier()
@@ -42,9 +51,13 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
         val jiraIssue = extractJiraIssueFromBranch(isAutoDetectProjectKey, branchName, jiraProjectKeys)
         val conventionalCommitType = extractConventionalCommitType(isConventionalCommit, branchName)
 
+        LOG.info("Extracted JIRA issue -> $jiraIssue, conventionalCommitType -> $conventionalCommitType")
+
         val selectedMessageWrapper = PluginSettingsState.instance.state.messageWrapperType
         val selectedPrefixType = PluginSettingsState.instance.state.messagePrefixType
         val selectedInfixType = PluginSettingsState.instance.state.messageInfixType
+
+        LOG.info("JIRA Commit message wrapper settings: selectedMessageWrapper -> $selectedMessageWrapper, selectedPrefixType -> $selectedPrefixType, selectedInfixType -> $selectedInfixType")
 
         return CommitMessageBuilder(jiraIssue)
             .withWrapper(selectedMessageWrapper)
@@ -68,11 +81,16 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
             jiraIssue = matchedJiraIssue?.value
         } else {
             for (projectKey in jiraProjectKeys) {
-                val pattern = Pattern.compile(String.format(Locale.US, "%s+[_-][0-9]+", projectKey)).toRegex()
-                val matchedJiraIssue = pattern.find(branchName)
+                val pattern = createPatternRegex(projectKey)
+                var matchedJiraIssue = pattern.find(branchName)
+
+                if (matchedJiraIssue == null) {
+                    val lowercasePattern = createPatternRegex(projectKey.lowercase())
+                    matchedJiraIssue = lowercasePattern.find(branchName)
+                }
 
                 if (matchedJiraIssue != null) {
-                    jiraIssue = matchedJiraIssue.value
+                    jiraIssue = matchedJiraIssue.value.uppercase()
                     break
                 }
             }
@@ -80,6 +98,9 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
         return jiraIssue
     }
+
+    private fun createPatternRegex(projectKey: String) =
+        Pattern.compile(String.format(Locale.US, "%s+[_-][0-9]+", projectKey)).toRegex()
 
     private fun extractConventionalCommitType(isConventionalCommit: Boolean, branchName: String): String? {
         if (isConventionalCommit) {
