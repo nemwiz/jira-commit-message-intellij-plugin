@@ -4,9 +4,12 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.vcs.CheckinProjectPanel
 import com.intellij.openapi.vcs.CommitMessageI
 import com.intellij.openapi.vcs.VcsDataKeys
+import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.ui.Refreshable
+import com.intellij.util.castSafelyTo
 import git4idea.GitUtil
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.services.JiraCommitMessagePlugin
@@ -23,12 +26,17 @@ class PluginAction : AnAction() {
             val plugin = currentProject.service<JiraCommitMessagePlugin>()
 
             val repositoryManager = GitUtil.getRepositoryManager(currentProject)
-            val branch = repositoryManager.repositories[0].currentBranch
 
-            LOG.info("JIRA Commit message plugin action - branch -> $branch")
+            val changes = getSelectedChanges(actionEvent)
 
-            val newCommitMessage = plugin.getCommitMessageFromBranchName(branch?.name)
-            setCommitMessage(actionEvent, newCommitMessage)
+            if (changes.isNotEmpty()) {
+                val branchName = plugin.extractBranchNameFromChanges(changes, repositoryManager)
+
+                LOG.info("JIRA Commit message plugin action - branch -> $branchName")
+
+                val newCommitMessage = plugin.getCommitMessageFromBranchName(branchName)
+                setCommitMessage(actionEvent, newCommitMessage)
+            }
         }
     }
 
@@ -52,5 +60,13 @@ class PluginAction : AnAction() {
         }
 
         return VcsDataKeys.COMMIT_MESSAGE_CONTROL.getData(actionEvent.dataContext)
+    }
+
+    private fun getSelectedChanges(actionEvent: AnActionEvent): MutableCollection<Change> {
+        val checkinProjectPanel = actionEvent.getData(Refreshable.PANEL_KEY).castSafelyTo<CheckinProjectPanel>()
+        if (checkinProjectPanel != null) {
+            return checkinProjectPanel.selectedChanges
+        }
+        return mutableListOf()
     }
 }
