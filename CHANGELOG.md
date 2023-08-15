@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [3.4.0] - 2023-08-15
+
 ### Added
 - Prepend JIRA issue to existing commit message when clicking plugin action button [#74](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/74)
 - Always uppercase JIRA project key even when branch is lowercase [#70](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/70)
@@ -76,7 +78,8 @@
 - Support up until IntelliJ version 2020.2
 - Migrated project to [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.0.1...v3.1.0
