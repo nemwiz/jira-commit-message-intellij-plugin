@@ -78,7 +78,10 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
             }
         }
         val changesInRepositories = repositoriesChanged.groupingBy { it }. eachCount().toList().sortedBy { (_, value) -> value }
-        var branchName = repositoryManager.repositories[0].currentBranch?.name
+        var branchName: String? = null
+        if (repositoryManager.repositories.isNotEmpty()) {
+            branchName = repositoryManager.repositories[0]?.currentBranch?.name
+        }
         for (changesInRepository in changesInRepositories) {
             val currentBranch = changesInRepository.first.currentBranch ?: continue
             val jiraIssue = extractJiraIssueFromBranch(currentBranch.name) ?: continue
