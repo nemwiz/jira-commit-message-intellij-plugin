@@ -5,6 +5,9 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.vcs.changes.Change
+import git4idea.repo.GitRepository
+import git4idea.repo.GitRepositoryManager
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
 import org.nemwiz.jiracommitmessage.provider.PluginNotifier
 import java.util.*
@@ -48,7 +51,7 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
 
         val isConventionalCommit = PluginSettingsState.instance.state.isConventionalCommit
 
-        val jiraIssue = extractJiraIssueFromBranch(isAutoDetectProjectKey, branchName, jiraProjectKeys)
+        val jiraIssue = extractJiraIssueFromBranch(branchName)
         val conventionalCommitType = extractConventionalCommitType(isConventionalCommit, branchName)
 
         LOG.info("Extracted JIRA issue -> $jiraIssue, conventionalCommitType -> $conventionalCommitType")
@@ -67,10 +70,28 @@ class JiraCommitMessagePlugin(private val project: Project) : Disposable {
             .getCommitMessage()
     }
 
+    fun extractBranchNameFromChanges(changes: MutableCollection<Change>, repositoryManager: GitRepositoryManager): String? {
+        val repositoriesChanged: MutableList<GitRepository> = mutableListOf()
+        for (change in changes) {
+            change.virtualFile?.let {
+                repositoryManager.getRepositoryForFileQuick(it)?.let { repository -> repositoriesChanged.add(repository) }
+            }
+        }
+        val changesInRepositories = repositoriesChanged.groupingBy { it }. eachCount().toList().sortedBy { (_, value) -> value }
+        var branchName = repositoryManager.repositories[0].currentBranch?.name
+        for (changesInRepository in changesInRepositories) {
+            val currentBranch = changesInRepository.first.currentBranch ?: continue
+            val jiraIssue = extractJiraIssueFromBranch(currentBranch.name) ?: continue
+            branchName = jiraIssue
+        }
+        return branchName
+    }
+
+
     private fun extractJiraIssueFromBranch(
-        isAutoDetectProjectKey: Boolean,
         branchName: String,
-        jiraProjectKeys: List<String>
+        isAutoDetectProjectKey: Boolean = PluginSettingsState.instance.state.isAutoDetectJiraProjectKey,
+        jiraProjectKeys: List<String> = PluginSettingsState.instance.state.jiraProjectKeys
     ): String? {
 
         var jiraIssue: String? = null
