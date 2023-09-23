@@ -20,11 +20,15 @@ class PluginProvider : CommitMessageProvider {
         val plugin = project.service<JiraCommitMessagePlugin>()
 
         val repositoryManager = GitUtil.getRepositoryManager(project)
-        val branch = repositoryManager.repositories[0].currentBranch
+        var newCommitMessage = ""
 
-        LOG.info("JIRA Commit message plugin provider - branch -> $branch")
-
-        val newCommitMessage = plugin.getCommitMessageFromBranchName(branch?.name)
+        if (repositoryManager.repositories.getOrNull(0) != null) {
+            val branch = repositoryManager.repositories[0].currentBranch
+            LOG.info("JIRA Commit message plugin provider - branch -> $branch")
+            newCommitMessage = plugin.getCommitMessageFromBranchName(branch?.name)
+        } else {
+            LOG.info("JIRA Commit message plugin provider - unable to find repository for this project")
+        }
 
         return if (newCommitMessage == "") {
             oldCommitMessage
