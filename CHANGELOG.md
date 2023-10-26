@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Changed
+- Fixes an IndexOutOfBounds exception when opening a project [#77](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/77)
+
 ## [3.4.0] - 2023-08-15
 
 ### Added
