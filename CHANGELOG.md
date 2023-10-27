@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [3.4.1] - 2023-10-27
+
 ### Changed
 - Fixes an IndexOutOfBounds exception when opening a project [#77](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/77)
 
@@ -81,7 +83,8 @@
 - Support up until IntelliJ version 2020.2
 - Migrated project to [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.4.0...HEAD
+[Unreleased]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.4.1...HEAD
+[3.4.1]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.4.0...v3.4.1
 [3.4.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/nemwiz/jira-commit-message-intellij-plugin/compare/v3.1.0...v3.2.0
