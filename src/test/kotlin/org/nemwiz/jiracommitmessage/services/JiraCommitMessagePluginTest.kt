@@ -47,13 +47,13 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage1 = plugin.getCommitMessageFromBranchName(mockBranch1)
 
-        assertEquals("(${dummyProjectKey2}-8172)", commitMessage1)
+        assertEquals("(${dummyProjectKey2}-8172) ", commitMessage1)
 
         val mockBranch2 = "hello/${dummyProjectKey1}_123-foo"
 
         val commitMessage2 = plugin.getCommitMessageFromBranchName(mockBranch2)
 
-        assertEquals("(${dummyProjectKey1}_123)", commitMessage2)
+        assertEquals("(${dummyProjectKey1}_123) ", commitMessage2)
     }
 
     fun testWrapsTheCommitMessageInSelectedWrapper() {
@@ -70,7 +70,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("{${dummyProjectKey1}-22}", commitMessage)
+        assertEquals("{${dummyProjectKey1}-22} ", commitMessage)
     }
 
     fun testDoesNotWrapCommitMessageWhenNoWrapperIsSelected() {
@@ -91,7 +91,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("${dummyProjectKey2}-381", commitMessage)
+        assertEquals("${dummyProjectKey2}-381 ", commitMessage)
     }
 
     fun testAddsInfixToTheCommitMessageWhenInfixIsSpecified() {
@@ -110,14 +110,14 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         var commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("{${dummyProjectKey1}-999222}:", commitMessage)
+        assertEquals("{${dummyProjectKey1}-999222}: ", commitMessage)
 
         PluginSettingsState.instance.pluginState.messageInfixType = InfixType.DASH_SPACE.type
         PluginSettingsState.instance.state.messageWrapperType = MessageWrapperType.NO_WRAPPER.type
 
         commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("${dummyProjectKey1}-999222 -", commitMessage)
+        assertEquals("${dummyProjectKey1}-999222 - ", commitMessage)
     }
 
     fun testNoInfixIsShownWhenInfixIsNotSpecified() {
@@ -136,7 +136,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("(${dummyProjectKey1}-123)", commitMessage)
+        assertEquals("(${dummyProjectKey1}-123) ", commitMessage)
     }
 
     fun testReturnsEmptyStringWhenBranchNameIsNotSpecified() {
@@ -169,13 +169,13 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage1 = plugin.getCommitMessageFromBranchName(mockBranch1)
 
-        assertEquals("(${dummyProjectKey1}-123)", commitMessage1)
+        assertEquals("(${dummyProjectKey1}-123) ", commitMessage1)
 
         val mockBranch2 = "fix/${dummyProjectKey1}_123_ui-error"
 
         val commitMessage2 = plugin.getCommitMessageFromBranchName(mockBranch2)
 
-        assertEquals("(${dummyProjectKey1}_123)", commitMessage2)
+        assertEquals("(${dummyProjectKey1}_123) ", commitMessage2)
     }
 
     fun testReturnsEmptyStringWhenBranchNameDoesNotMatchAnyConfiguredJiraProjectKeys() {
@@ -231,13 +231,13 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage1 = plugin.getCommitMessageFromBranchName(mockBranch1)
 
-        assertEquals("feat(${dummyProjectKey1}-123)", commitMessage1)
+        assertEquals("feat(${dummyProjectKey1}-123) ", commitMessage1)
 
         val mockBranch2 = "chore-awesome-LEGOS-123"
 
         val commitMessage2 = plugin.getCommitMessageFromBranchName(mockBranch2)
 
-        assertEquals("chore(${dummyProjectKey1}-123)", commitMessage2)
+        assertEquals("chore(${dummyProjectKey1}-123) ", commitMessage2)
     }
 
     fun testReturnConventionalCommitInfixWhenConventionalCommitsOptionIsOnAndAutomaticDetectIsOn() {
@@ -253,13 +253,13 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage1 = plugin.getCommitMessageFromBranchName(mockBranch1)
 
-        assertEquals("fix(PLUGIN-831):", commitMessage1)
+        assertEquals("fix(PLUGIN-831): ", commitMessage1)
 
         val mockBranch2 = "docs-awesome-PLUGIN-831"
 
         val commitMessage2 = plugin.getCommitMessageFromBranchName(mockBranch2)
 
-        assertEquals("docs(PLUGIN-831):", commitMessage2)
+        assertEquals("docs(PLUGIN-831): ", commitMessage2)
     }
 
     fun testDoesNotAddConventionalCommitInfixWhenConventionalCommitsAreNotOn() {
@@ -275,7 +275,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("[PLUGIN-831]", commitMessage)
+        assertEquals("[PLUGIN-831] ", commitMessage)
     }
 
     fun testOnlyAddsInfixFromTheSupportedConventionalCommitInfix() {
@@ -310,16 +310,16 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
         assertFalse(commitMessages.contains("dummy(PROJ-123)"))
         assertFalse(commitMessages.contains("unknown(PROJ-123)"))
 
-        assertTrue(commitMessages.contains("test(PROJ-123)"))
-        assertTrue(commitMessages.contains("ci(PROJ-123)"))
-        assertTrue(commitMessages.contains("chore(PROJ-123)"))
-        assertTrue(commitMessages.contains("build(PROJ-123)"))
-        assertTrue(commitMessages.contains("fix(PROJ-123)"))
-        assertTrue(commitMessages.contains("feat(PROJ-123)"))
-        assertTrue(commitMessages.contains("docs(PROJ-123)"))
-        assertTrue(commitMessages.contains("perf(PROJ-123)"))
-        assertTrue(commitMessages.contains("refactor(PROJ-123)"))
-        assertTrue(commitMessages.contains("style(PROJ-123)"))
+        assertTrue(commitMessages.contains("test(PROJ-123) "))
+        assertTrue(commitMessages.contains("ci(PROJ-123) "))
+        assertTrue(commitMessages.contains("chore(PROJ-123) "))
+        assertTrue(commitMessages.contains("build(PROJ-123) "))
+        assertTrue(commitMessages.contains("fix(PROJ-123) "))
+        assertTrue(commitMessages.contains("feat(PROJ-123) "))
+        assertTrue(commitMessages.contains("docs(PROJ-123) "))
+        assertTrue(commitMessages.contains("perf(PROJ-123) "))
+        assertTrue(commitMessages.contains("refactor(PROJ-123) "))
+        assertTrue(commitMessages.contains("style(PROJ-123) "))
     }
 
     fun testAddsConventionalCommitInfixOnlyWhenBranchNameStartsWithConventionalInfix() {
@@ -335,15 +335,15 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         var commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("[TICKET-123]", commitMessage)
+        assertEquals("[TICKET-123] ", commitMessage)
 
         mockBranch = "TICKET-123-feature-test-branch-name"
         commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
-        assertEquals("[TICKET-123]", commitMessage)
+        assertEquals("[TICKET-123] ", commitMessage)
 
         mockBranch = "TICKET-123_feature-test-branch-name"
         commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
-        assertEquals("[TICKET-123]", commitMessage)
+        assertEquals("[TICKET-123] ", commitMessage)
     }
 
     fun testDoesNotAddPrefixWhenPrefixIsNotSet() {
@@ -359,7 +359,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("[PLUGIN-831]", commitMessage)
+        assertEquals("[PLUGIN-831] ", commitMessage)
     }
 
     fun testAddsPrefixWhenMessagePrefixIsSet() {
@@ -375,7 +375,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals("#PLUGIN-831:", commitMessage)
+        assertEquals("#PLUGIN-831: ", commitMessage)
     }
 
     fun testAlwaysAddsPrefixToTheBeginningOfTheMessageWhenPrefixIsSet() {
@@ -391,7 +391,7 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         val commitMessage = plugin.getCommitMessageFromBranchName(mockBranch)
 
-        assertEquals(":test{PLUGIN-831}", commitMessage)
+        assertEquals(":test{PLUGIN-831} ", commitMessage)
     }
 
     fun testAlwaysUppercaseProjectKeyFromBranchNameWhenProjectKeysAreSpecifiedManually() {
@@ -410,13 +410,13 @@ class JiraCommitMessagePluginTest : BasePlatformTestCase() {
 
         var commitMessage = plugin.getCommitMessageFromBranchName(mockBranchWithLowercaseProjectKey)
 
-        assertEquals("{LEGOS-831}", commitMessage)
+        assertEquals("{LEGOS-831} ", commitMessage)
 
         PluginSettingsState.instance.state.isConventionalCommit = true
 
         commitMessage = plugin.getCommitMessageFromBranchName(mockBranchWithLowercaseProjectKey)
 
-        assertEquals("test{LEGOS-831}", commitMessage)
+        assertEquals("test{LEGOS-831} ", commitMessage)
     }
 
     fun testDoesNotUppercaseProjectKeyAndReturnsEmptyStringWhenProjectKeyIsLowercaseInBranchNameAndAutoDetectJiraOptionIsTurnedOn() {

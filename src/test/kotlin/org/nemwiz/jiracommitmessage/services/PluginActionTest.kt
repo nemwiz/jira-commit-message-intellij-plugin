@@ -36,7 +36,7 @@ class PluginActionTest : BasePlatformTestCase() {
 
         pluginAction.setCommitMessage(actionEventMock, newCommitMessage)
 
-        verify { commitPanelMock.setCommitMessage(String.format("%s %s", newCommitMessage, existingCommitMessage)) }
+        verify { commitPanelMock.setCommitMessage(String.format("%s%s", newCommitMessage, existingCommitMessage)) }
     }
 
     fun testDoesNotAppendJiraIssueToExistingCommitMessageWhenThisOptionIsDisabled() {

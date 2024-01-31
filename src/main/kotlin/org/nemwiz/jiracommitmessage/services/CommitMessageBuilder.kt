@@ -58,7 +58,7 @@ class CommitMessageBuilder(private val jiraIssue: String?) {
     }
 
     fun getCommitMessage(): String {
-        return if (jiraIssue == null) "" else commitMessage
+        return if (jiraIssue == null) "" else String.format("%s ", commitMessage)
     }
 
 }
