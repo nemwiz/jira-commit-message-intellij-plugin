@@ -34,23 +34,13 @@ class PluginAction : AnAction() {
 
     fun setCommitMessage(actionEvent: AnActionEvent, newCommitMessage: String) {
 
-        val commitPanel = getCommitPanel(actionEvent)
+        val commitPanel = actionEvent.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT)
 
         if (PluginSettingsState.instance.state.isPrependJiraIssueOnActionClick) {
-            val existingCommitMessage = actionEvent.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT)?.text
-            commitPanel?.setCommitMessage(String.format("%s %s", newCommitMessage, existingCommitMessage))
+            val existingCommitMessage = commitPanel?.text
+            commitPanel?.setText(String.format("%s %s", newCommitMessage, existingCommitMessage))
         } else {
-            commitPanel?.setCommitMessage(newCommitMessage)
+            commitPanel?.setText(newCommitMessage)
         }
-    }
-
-    private fun getCommitPanel(actionEvent: AnActionEvent): CommitMessageI? {
-        val data = Refreshable.PANEL_KEY.getData(actionEvent.dataContext)
-
-        if (data is CommitMessageI) {
-            return data
-        }
-
-        return VcsDataKeys.COMMIT_MESSAGE_CONTROL.getData(actionEvent.dataContext)
     }
 }
