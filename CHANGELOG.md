@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Changed
+- Adds a whitespace at the end of each commit message [#80](https://github.com/nemwiz/jira-commit-message-intellij-plugin/issues/80)
+
 ## [3.4.1] - 2023-10-27
 
 ### Changed

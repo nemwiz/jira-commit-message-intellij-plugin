@@ -1,23 +1,23 @@
 [versions]
 # libraries
-annotations = "24.0.1"
+junit = "4.13.2"
 
 # testing libraries
-mockk = "1.13.5"
-remoteRobot = "0.11.16"
-loggingInterceptor = "4.10.0"
+mockk = "1.13.12"
+remoteRobot = "0.11.23"
+loggingInterceptor = "4.12.0"
 
 
 # plugins
-kotlin = "1.9.0"
-changelog = "2.1.2"
-gradleIntelliJPlugin = "1.15.0"
-qodana = "0.1.13"
-kover = "0.7.3"
+kotlin = "1.9.25"
+changelog = "2.2.1"
+intelliJPlatform = "2.0.1"
+qodana = "2024.1.9"
+kover = "0.8.3"
 
 
 [libraries]
-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 remoteRobot = { group = "com.intellij.remoterobot", name = "remote-robot", version.ref = "remoteRobot" }
 remoteFixtures = { group = "com.intellij.remoterobot", name = "remote-fixtures", version.ref = "remoteRobot" }
@@ -26,7 +26,7 @@ loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-intercept
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
-gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+intelliJPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "intelliJPlatform" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }

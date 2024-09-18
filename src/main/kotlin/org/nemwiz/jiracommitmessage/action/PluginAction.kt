@@ -38,7 +38,7 @@ class PluginAction : AnAction() {
 
         if (PluginSettingsState.instance.state.isPrependJiraIssueOnActionClick) {
             val existingCommitMessage = actionEvent.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT)?.text
-            commitPanel?.setCommitMessage(String.format("%s %s", newCommitMessage, existingCommitMessage))
+            commitPanel?.setCommitMessage(String.format("%s%s", newCommitMessage, existingCommitMessage))
         } else {
             commitPanel?.setCommitMessage(newCommitMessage)
         }
