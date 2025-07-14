@@ -9,10 +9,11 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import io.mockk.*
 import org.nemwiz.jiracommitmessage.action.PluginAction
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
+import org.nemwiz.jiracommitmessage.configuration.WritePositionType
 
 class PluginActionTest : BasePlatformTestCase() {
 
-    fun testAppendsJiraIssueToExistingCommitMessageWhenThisOptionIsEnabled() {
+    fun testPrependsJiraIssueToExistingCommitMessageWhenThisOptionIsPrepend() {
 
         val commitPanelMock = mockkClass(CommitMessage::class)
         val refreshablePanelMock = mockkClass(Refreshable::class)
@@ -28,7 +29,7 @@ class PluginActionTest : BasePlatformTestCase() {
 
         every { commitPanelMock.setCommitMessage(any()) } just Runs
 
-        PluginSettingsState.instance.state.isPrependJiraIssueOnActionClick = true
+        PluginSettingsState.instance.state.writePositionForJiraIssueOnActionClick = WritePositionType.PRE_PEND.type
 
         val newCommitMessage = "(PROJ-456):"
 
@@ -39,7 +40,7 @@ class PluginActionTest : BasePlatformTestCase() {
         verify { commitPanelMock.setCommitMessage(String.format("%s%s", newCommitMessage, existingCommitMessage)) }
     }
 
-    fun testDoesNotAppendJiraIssueToExistingCommitMessageWhenThisOptionIsDisabled() {
+    fun testDoesNotAppendJiraIssueToExistingCommitMessageWhenThisOptionIsOverwrite() {
 
         val commitPanelMock = mockkClass(CommitMessage::class)
         val refreshablePanelMock = mockkClass(Refreshable::class)
@@ -50,7 +51,7 @@ class PluginActionTest : BasePlatformTestCase() {
 
         every { commitPanelMock.setCommitMessage(any()) } just Runs
 
-        PluginSettingsState.instance.state.isPrependJiraIssueOnActionClick = false
+        PluginSettingsState.instance.state.writePositionForJiraIssueOnActionClick = WritePositionType.OVERWRITE.type
         val newCommitMessage = "(PROJ-456):"
 
         val pluginAction = PluginAction()
@@ -58,6 +59,33 @@ class PluginActionTest : BasePlatformTestCase() {
         pluginAction.setCommitMessage(actionEventMock, newCommitMessage)
 
         verify { commitPanelMock.setCommitMessage(newCommitMessage) }
+    }
+
+    fun testPostpendJiraIssueToExistingCommitMessageWhenThisOptionIsPostpend() {
+
+        val commitPanelMock = mockkClass(CommitMessage::class)
+        val refreshablePanelMock = mockkClass(Refreshable::class)
+        val actionEventMock = mockkClass(AnActionEvent::class)
+        val documentMock = mockkClass(Document::class)
+
+        val existingCommitMessage = "This message was already shown in the panel"
+        every { documentMock.text } returns existingCommitMessage
+
+        every { Refreshable.PANEL_KEY.getData(actionEventMock.dataContext) } returns refreshablePanelMock
+        every { VcsDataKeys.COMMIT_MESSAGE_CONTROL.getData(actionEventMock.dataContext) } returns commitPanelMock
+        every { actionEventMock.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT) } returns documentMock
+
+        every { commitPanelMock.setCommitMessage(any()) } just Runs
+
+        PluginSettingsState.instance.state.writePositionForJiraIssueOnActionClick = WritePositionType.POST_PEND.type
+
+        val newCommitMessage = "(PROJ-456):"
+
+        val pluginAction = PluginAction()
+
+        pluginAction.setCommitMessage(actionEventMock, newCommitMessage)
+
+        verify { commitPanelMock.setCommitMessage(String.format("%s%s", existingCommitMessage, newCommitMessage)) }
     }
 
 }

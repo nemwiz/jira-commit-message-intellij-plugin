@@ -20,7 +20,7 @@ class PluginSettingsConfiguration : Configurable {
             .messageWrapperTypeDropdown.selectedItem != pluginSettingsState.messageWrapperType ||
             pluginSettingsConfigurationPanel.prefixTypeDropdown.selectedItem != pluginSettingsState.messagePrefixType ||
             pluginSettingsConfigurationPanel.infixTypeDropdown.selectedItem != pluginSettingsState.messageInfixType ||
-            pluginSettingsConfigurationPanel.prependJiraIssueOnPluginActionClickCheckbox.isSelected != pluginSettingsState.isPrependJiraIssueOnActionClick ||
+            pluginSettingsConfigurationPanel.writePositionTypeForJiraIssueOnPluginActionDropdown.selectedItem != pluginSettingsState.writePositionForJiraIssueOnActionClick ||
             pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected != pluginSettingsState.isConventionalCommit ||
             pluginSettingsConfigurationPanel.isAutoDetectJiraProjectKeyCheckbox.isSelected != pluginSettingsState.isAutoDetectJiraProjectKey ||
             setOf(pluginSettingsConfigurationPanel.projectKeysModel.items) != setOf(pluginSettingsState.jiraProjectKeys)
@@ -39,8 +39,10 @@ class PluginSettingsConfiguration : Configurable {
             .infixTypeDropdown
             .selectedItem
             .toString()
-        pluginSettingsState.isPrependJiraIssueOnActionClick =
-            pluginSettingsConfigurationPanel.prependJiraIssueOnPluginActionClickCheckbox.isSelected
+        pluginSettingsState.writePositionForJiraIssueOnActionClick =pluginSettingsConfigurationPanel
+            .writePositionTypeForJiraIssueOnPluginActionDropdown
+            .selectedItem
+            .toString()
         pluginSettingsState.isConventionalCommit =
             pluginSettingsConfigurationPanel.isConventionalCommitCheckbox.isSelected
         pluginSettingsState.isAutoDetectJiraProjectKey =
@@ -67,8 +69,8 @@ class PluginSettingsConfiguration : Configurable {
             .infixTypeDropdown
             .selectedItem = pluginSettingsState.messageInfixType
         pluginSettingsConfigurationPanel
-            .prependJiraIssueOnPluginActionClickCheckbox
-            .isSelected = pluginSettingsState.isPrependJiraIssueOnActionClick
+            .writePositionTypeForJiraIssueOnPluginActionDropdown
+            .selectedItem = pluginSettingsState.writePositionForJiraIssueOnActionClick
         pluginSettingsConfigurationPanel
             .isConventionalCommitCheckbox
             .isSelected = pluginSettingsState.isConventionalCommit
