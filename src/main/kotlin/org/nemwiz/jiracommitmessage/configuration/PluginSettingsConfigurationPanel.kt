@@ -22,7 +22,9 @@ class PluginSettingsConfigurationPanel {
     private var projectKeys = PluginSettingsState.instance.state.jiraProjectKeys
     var isAutoDetectJiraProjectKeyCheckbox: JBCheckBox = JBCheckBox()
     var isConventionalCommitCheckbox: JBCheckBox = JBCheckBox()
-    var prependJiraIssueOnPluginActionClickCheckbox: JBCheckBox = JBCheckBox()
+//    var prependJiraIssueOnPluginActionClickCheckbox: JBCheckBox = JBCheckBox()
+    var writePositionTypeForJiraIssueOnPluginActionDropdown: ComboBox<String> = ComboBox()
+
     var projectKeysList: JBList<String>
     var projectKeysModel: CollectionListModel<String>
     private var toolbar: ToolbarDecorator
@@ -48,6 +50,10 @@ class PluginSettingsConfigurationPanel {
         infixTypeDropdown.addItem(InfixType.DASH_SPACE.type)
         infixTypeDropdown.addItem(InfixType.COLON.type)
         infixTypeDropdown.addItem(InfixType.COLON_SPACE.type)
+
+        writePositionTypeForJiraIssueOnPluginActionDropdown.addItem(WritePositionType.OVERWRITE.type)
+        writePositionTypeForJiraIssueOnPluginActionDropdown.addItem(WritePositionType.PRE_PEND.type)
+        writePositionTypeForJiraIssueOnPluginActionDropdown.addItem(WritePositionType.POST_PEND.type)
 
         projectKeysModel = CollectionListModel<String>(projectKeys)
         projectKeysList = JBList(projectKeysModel)
@@ -76,8 +82,8 @@ class PluginSettingsConfigurationPanel {
             .addLabeledComponent(JBLabel("Commit message prefix"), prefixTypeDropdown, 1, false)
             .addLabeledComponent(JBLabel("Commit message infix"), infixTypeDropdown, 1, false)
             .addLabeledComponent(
-                JBLabel("Prepend JIRA issue to existing commit message on plugin action click"),
-                prependJiraIssueOnPluginActionClickCheckbox,
+                JBLabel("Select position (pre/post)-pend/overwrite"),
+                writePositionTypeForJiraIssueOnPluginActionDropdown,
                 1,
                 false
             )

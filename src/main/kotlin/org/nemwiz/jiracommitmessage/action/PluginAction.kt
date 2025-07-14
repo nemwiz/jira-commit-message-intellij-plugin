@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.ui.Refreshable
 import git4idea.GitUtil
 import org.nemwiz.jiracommitmessage.configuration.PluginSettingsState
+import org.nemwiz.jiracommitmessage.configuration.WritePositionType
 import org.nemwiz.jiracommitmessage.services.JiraCommitMessagePlugin
 
 private val LOG = logger<PluginAction>()
@@ -36,12 +37,22 @@ class PluginAction : AnAction() {
 
         val commitPanel = getCommitPanel(actionEvent)
 
-        if (PluginSettingsState.instance.state.isPrependJiraIssueOnActionClick) {
-            val existingCommitMessage = actionEvent.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT)?.text
-            commitPanel?.setCommitMessage(String.format("%s%s", newCommitMessage, existingCommitMessage))
-        } else {
-            commitPanel?.setCommitMessage(newCommitMessage)
+        val currentWriteState = PluginSettingsState.instance.state.writePositionForJiraIssueOnActionClick
+
+        when (currentWriteState) {
+            WritePositionType.OVERWRITE.type -> {
+                commitPanel?.setCommitMessage(newCommitMessage)
+            }
+            WritePositionType.PRE_PEND.type -> {
+                val existingCommitMessage = actionEvent.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT)?.text
+                commitPanel?.setCommitMessage(String.format("%s%s", newCommitMessage, existingCommitMessage))
+            }
+            WritePositionType.POST_PEND.type -> {
+                val existingCommitMessage = actionEvent.dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_DOCUMENT)?.text
+                commitPanel?.setCommitMessage(String.format("%s%s", existingCommitMessage, newCommitMessage))
+            }
         }
+
     }
 
     private fun getCommitPanel(actionEvent: AnActionEvent): CommitMessageI? {
